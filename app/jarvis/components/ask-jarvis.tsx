@@ -18,6 +18,65 @@ type JarvisResponse = {
   }>;
 };
 
+function StatusField({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="min-w-0 bg-[#030302] px-2.5 py-2">
+      <div className="font-mono text-[7px] uppercase tracking-[0.12em] text-white/20">
+        {label}
+      </div>
+      <div className="mt-1 truncate font-mono text-[9px] text-amber-400/70">
+        {value}
+      </div>
+    </div>
+  );
+}
+
+function RepositoryStatus({ result }: { result: unknown }) {
+  if (!result || typeof result !== "object" || !("repository" in result)) {
+    return null;
+  }
+
+  const snapshot = result as {
+    repository?: {
+      fullName?: unknown;
+      visibility?: unknown;
+      defaultBranch?: unknown;
+      archived?: unknown;
+      id?: unknown;
+      sizeKb?: unknown;
+    };
+    provider?: unknown;
+    mutationsEnabled?: unknown;
+  };
+
+  if (!snapshot.repository || typeof snapshot.repository !== "object") {
+    return null;
+  }
+
+  const repository = snapshot.repository;
+
+  return (
+    <div className="mt-3">
+      <div className="mb-2 font-mono text-[8px] uppercase tracking-[0.16em] text-white/20">
+        Repository Status
+      </div>
+      <div className="grid grid-cols-2 gap-px border border-white/[0.05] bg-white/[0.05] sm:grid-cols-4">
+        <StatusField label="Repository" value={String(repository.fullName ?? "—")} />
+        <StatusField label="Visibility" value={String(repository.visibility ?? "—")} />
+        <StatusField label="Default Branch" value={String(repository.defaultBranch ?? "—")} />
+        <StatusField label="Archived" value={repository.archived ? "YES" : "NO"} />
+        <StatusField label="Repository ID" value={String(repository.id ?? "—")} />
+        <StatusField label="Size" value={String(repository.sizeKb ?? "—") + " KB"} />
+        <StatusField label="Provider" value={String(snapshot.provider ?? "—")} />
+        <StatusField
+          label="Mutations"
+          value={snapshot.mutationsEnabled ? "ENABLED" : "DISABLED"}
+        />
+      </div>
+    </div>
+  );
+}
+
 export default function AskJarvis() {
   const [command, setCommand] = useState("");
   const [response, setResponse] = useState<JarvisResponse | null>(null);
@@ -133,6 +192,8 @@ export default function AskJarvis() {
               {item.error && (
                 <p className="mt-1 font-mono text-[9px] text-red-300/60">{item.error}</p>
               )}
+
+              {item.succeeded && <RepositoryStatus result={item.result} />}
             </div>
           ))}
         </div>
