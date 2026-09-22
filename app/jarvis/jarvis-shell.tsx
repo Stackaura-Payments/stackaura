@@ -8,6 +8,7 @@ import SystemLog from "./components/system-log";
 import AgentsPanel from "./components/agents-panel";
 import ApprovalsPanel from "./components/approvals-panel";
 import AskJarvis from "./components/ask-jarvis";
+import OperationHistory from "./components/operation-history";
 
 export default function JarvisShell() {
   return (
@@ -128,6 +129,7 @@ export default function JarvisShell() {
             </div>
 
             <SystemLog />
+            <OperationHistory />
             <AgentsPanel />
             <ApprovalsPanel />
             <AskJarvis />
