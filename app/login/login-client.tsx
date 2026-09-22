@@ -207,9 +207,11 @@ function EyeIcon({ visible }: { visible: boolean }) {
 export default function LoginClient({
   accountCreated,
   createdEmail,
+  nextPath,
 }: {
   accountCreated: boolean;
   createdEmail: string;
+  nextPath?: string;
 }) {
   const router = useRouter();
 
@@ -272,7 +274,12 @@ export default function LoginClient({
       });
       setSubmitState("success");
       await new Promise((resolve) => setTimeout(resolve, 700));
-      router.replace("/dashboard");
+      const destination =
+        nextPath && nextPath.startsWith("/") && !nextPath.startsWith("//")
+          ? nextPath
+          : "/dashboard";
+
+      router.replace(destination);
       router.refresh();
     } catch {
       setFieldErrors({

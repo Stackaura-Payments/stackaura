@@ -6,6 +6,7 @@ import LoginClient from "./login-client";
 type LoginSearchParams = Promise<{
   created?: string | string[];
   email?: string | string[];
+  next?: string | string[];
 }>;
 
 function getSearchValue(value: string | string[] | undefined) {
@@ -23,6 +24,13 @@ export default async function LoginPage({
   const resolvedSearchParams = await searchParams;
   const created = getSearchValue(resolvedSearchParams.created) === "1";
   const email = getSearchValue(resolvedSearchParams.email) || "";
+  const next = getSearchValue(resolvedSearchParams.next);
 
-  return <LoginClient accountCreated={created} createdEmail={email} />;
+  return (
+    <LoginClient
+      accountCreated={created}
+      createdEmail={email}
+      nextPath={next}
+    />
+  );
 }
