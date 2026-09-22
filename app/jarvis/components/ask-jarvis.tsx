@@ -31,6 +31,59 @@ function StatusField({ label, value }: { label: string; value: string }) {
   );
 }
 
+function VercelDeploymentStatus({ result }: { result: unknown }) {
+  if (!result || typeof result !== "object" || !("deployment" in result)) {
+    return null;
+  }
+
+  const snapshot = result as {
+    deployment?: {
+      id?: unknown;
+      projectId?: unknown;
+      url?: unknown;
+      state?: unknown;
+      target?: unknown;
+      createdAt?: unknown;
+      commitSha?: unknown;
+      commitMessage?: unknown;
+      branch?: unknown;
+    };
+    provider?: unknown;
+    mutationsEnabled?: unknown;
+  };
+
+  if (!snapshot.deployment || typeof snapshot.deployment !== "object") {
+    return null;
+  }
+
+  const deployment = snapshot.deployment;
+
+  return (
+    <div className="mt-3">
+      <div className="mb-2 font-mono text-[8px] uppercase tracking-[0.16em] text-white/20">
+        Vercel Deployment Status
+      </div>
+      <div className="grid grid-cols-2 gap-px border border-white/[0.05] bg-white/[0.05] sm:grid-cols-4">
+        <StatusField label="Project ID" value={String(deployment.projectId ?? "—")} />
+        <StatusField label="Deployment" value={String(deployment.id ?? "—")} />
+        <StatusField label="State" value={String(deployment.state ?? "—")} />
+        <StatusField label="Target" value={String(deployment.target ?? "—")} />
+        <StatusField label="Branch" value={String(deployment.branch ?? "—")} />
+        <StatusField label="Commit" value={String(deployment.commitSha ?? "—")} />
+        <StatusField label="Provider" value={String(snapshot.provider ?? "—")} />
+        <StatusField
+          label="Mutations"
+          value={snapshot.mutationsEnabled ? "ENABLED" : "DISABLED"}
+        />
+      </div>
+      <div className="mt-px grid gap-px border-x border-b border-white/[0.05] bg-white/[0.05] sm:grid-cols-2">
+        <StatusField label="Commit Message" value={String(deployment.commitMessage ?? "—")} />
+        <StatusField label="Deployment URL" value={String(deployment.url ?? "—")} />
+      </div>
+    </div>
+  );
+}
+
 function RepositoryStatus({ result }: { result: unknown }) {
   if (!result || typeof result !== "object" || !("repository" in result)) {
     return null;
@@ -193,7 +246,12 @@ export default function AskJarvis() {
                 <p className="mt-1 font-mono text-[9px] text-red-300/60">{item.error}</p>
               )}
 
-              {item.succeeded && <RepositoryStatus result={item.result} />}
+              {item.succeeded && (
+                <>
+                  <VercelDeploymentStatus result={item.result} />
+                  <RepositoryStatus result={item.result} />
+                </>
+              )}
             </div>
           ))}
         </div>
