@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { ArrowUp, Loader2, Terminal } from "lucide-react";
 
 type JarvisResponse = {
@@ -27,6 +27,85 @@ function StatusField({ label, value }: { label: string; value: string }) {
       <div className="mt-1 truncate font-mono text-[9px] text-amber-400/70">
         {value}
       </div>
+    </div>
+  );
+}
+
+type RepairStatus =
+  | "PENDING_APPROVAL" | "APPROVED" | "BRANCHING" | "APPLYING_FIX"
+  | "VERIFYING_CI" | "READY_TO_DEPLOY" | "DEPLOYING"
+  | "VERIFYING_DEPLOYMENT" | "SUCCEEDED" | "FAILED"
+  | "RECOVERY_REQUIRED" | "DENIED";
+
+type Repair = {
+  id: string;
+  status: RepairStatus;
+  branchName?: string | null;
+  currentCommitSha?: string | null;
+  progress?: { phase?: string; message?: string; updatedAt?: string } | null;
+  error?: string | null;
+  updatedAt?: string;
+};
+
+function repairStatusLabel(status: RepairStatus) {
+  return status.replaceAll("_", " ");
+}
+
+function RepairLifecyclePanel() {
+  const [repair, setRepair] = useState<Repair | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    const load = async () => {
+      try {
+        const response = await fetch("/api/jarvis/owner/engineering/repairs?limit=1", { cache: "no-store" });
+        if (!response.ok) return;
+        const data = await response.json();
+        const latest = Array.isArray(data) ? data[0] : null;
+        if (!cancelled) setRepair(latest && typeof latest.id === "string" ? latest : null);
+      } catch {
+        // The command interface should remain usable if lifecycle polling is unavailable.
+      }
+    };
+    void load();
+    const poll = window.setInterval(() => void load(), 2500);
+    return () => {
+      cancelled = true;
+      window.clearInterval(poll);
+    };
+  }, []);
+
+  if (!repair || ["SUCCEEDED", "FAILED", "DENIED"].includes(repair.status)) {
+    return null;
+  }
+
+  const message = repair.progress?.message
+    ?? (repair.status === "APPROVED" ? "Owner approval received. Waiting for execution." : "Repair lifecycle is active.");
+
+  return (
+    <div className="mt-3 border border-amber-400/[0.12] bg-amber-400/[0.025] p-3">
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <span className="font-mono text-[8px] uppercase tracking-[0.18em] text-amber-400/65">
+          Live Repair Lifecycle
+        </span>
+        <span className="font-mono text-[8px] uppercase tracking-[0.14em] text-amber-300">
+          {repairStatusLabel(repair.status)}
+        </span>
+      </div>
+      <div className="mt-3 grid gap-px border border-white/[0.05] bg-white/[0.05] sm:grid-cols-3">
+        <StatusField label="Phase" value={String(repair.progress?.phase ?? repair.status)} />
+        <StatusField label="Branch" value={String(repair.branchName ?? "—")} />
+        <StatusField label="Commit" value={String(repair.currentCommitSha ?? "—")} />
+      </div>
+      <div className="mt-px border border-white/[0.05] bg-[#030302] p-3">
+        <div className="font-mono text-[7px] uppercase tracking-[0.12em] text-white/20">Current Operation</div>
+        <p className="mt-1 font-mono text-[9px] leading-5 text-amber-300/70">{message}</p>
+      </div>
+      {repair.error && (
+        <div className="mt-px border border-red-400/[0.08] bg-red-400/[0.025] p-3 font-mono text-[9px] text-red-300/65">
+          {repair.error}
+        </div>
+      )}
     </div>
   );
 }
@@ -309,6 +388,8 @@ export default function AskJarvis() {
           {error}
         </div>
       )}
+
+      <RepairLifecyclePanel />
 
       {response && (
         <div className="mt-3 border border-amber-400/[0.08] bg-black/30 p-3">
