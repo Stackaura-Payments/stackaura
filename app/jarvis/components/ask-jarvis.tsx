@@ -91,6 +91,35 @@ function DiagnosticPanel({ result }: { result: unknown }) {
   const source = d.sourceAnalysis;
   const evidence = Array.isArray(d.evidence) ? d.evidence : [];
   const remediation = d.remediation;
+  const [repairState, setRepairState] = useState<"idle" | "creating" | "created" | "error">("idle");
+  const [repairMessage, setRepairMessage] = useState<string | null>(null);
+  const canCreateRepair = diagnosis?.confidence === "high"
+    && Array.isArray(remediation?.actions)
+    && remediation.actions.some((action: any) => action.toolId === "jarvis.owner.github.update-file")
+    && Boolean(source?.repository)
+    && Boolean(d?.deployment?.commitSha);
+
+  async function createRepair() {
+    if (!canCreateRepair || repairState === "creating") return;
+    setRepairState("creating");
+    setRepairMessage(null);
+    try {
+      const res = await fetch("/api/jarvis/owner/engineering/repairs/from-diagnosis", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ diagnosis: d }),
+      });
+      const body = await res.json().catch(() => null);
+      if (!res.ok) throw new Error(body?.message || `Repair proposal failed (${res.status}).`);
+      setRepairState("created");
+      setRepairMessage(`Repair ${String(body?.repairId ?? "created")} is awaiting owner approval.`);
+    } catch (error) {
+      setRepairState("error");
+      setRepairMessage(error instanceof Error ? error.message : "Repair proposal failed.");
+    }
+  }
+
   return (
     <div className="mt-3 space-y-3">
       <div className="border border-amber-400/[0.10] bg-amber-400/[0.025] p-3">
@@ -131,6 +160,14 @@ function DiagnosticPanel({ result }: { result: unknown }) {
         <div className="mb-2 font-mono text-[8px] uppercase tracking-[0.16em] text-amber-400/55">Exact Fix</div>
         <p className="font-mono text-[9px] leading-5 text-white/65">{String(remediation?.exactFix ?? "—")}</p>
         {Array.isArray(remediation?.actions) && remediation.actions.length > 0 && <div className="mt-3 space-y-1 border-t border-white/[0.04] pt-3">{remediation.actions.map((action: any, index: number) => <div key={`${String(action.toolId)}-${index}`} className="flex flex-wrap items-center gap-2 font-mono text-[8px]"><span className="text-amber-400/65">{String(action.toolId)}</span><span className="text-white/35">{String(action.intent)}</span>{action.requiresApproval && <span className="text-amber-300">OWNER APPROVAL REQUIRED</span>}</div>)}</div>}
+        {canCreateRepair && (
+          <div className="mt-4 flex flex-wrap items-center gap-3 border-t border-amber-400/[0.08] pt-3">
+            <button type="button" onClick={createRepair} disabled={repairState === "creating" || repairState === "created"} className="border border-amber-400/20 bg-amber-400/[0.05] px-3 py-2 font-mono text-[8px] uppercase tracking-[0.16em] text-amber-300 transition hover:border-amber-400/40 hover:bg-amber-400/[0.09] disabled:cursor-not-allowed disabled:opacity-50">
+              {repairState === "creating" ? "CREATING REPAIR…" : repairState === "created" ? "REPAIR PROPOSED" : "CREATE REPAIR"}
+            </button>
+            {repairMessage && <span className={`font-mono text-[8px] ${repairState === "error" ? "text-red-300/70" : "text-white/45"}`}>{repairMessage}</span>}
+          </div>
+        )}
       </div>
     </div>
   );

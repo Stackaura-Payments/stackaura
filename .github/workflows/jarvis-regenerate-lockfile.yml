@@ -1,0 +1,50 @@
+name: JARVIS Regenerate Lockfile
+
+on:
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: 'Isolated JARVIS repair branch'
+        required: true
+        type: string
+      packageManager:
+        description: 'Package manager'
+        required: true
+        default: npm
+        type: choice
+        options:
+          - npm
+
+permissions:
+  contents: write
+
+jobs:
+  regenerate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repair branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.branch }}
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Regenerate npm lockfile
+        run: npm install --package-lock-only --ignore-scripts
+
+      - name: Commit regenerated lockfile
+        run: |
+          git config user.name 'JARVIS Repair Bot'
+          git config user.email 'jarvis@stackaura.co.za'
+          if git diff --quiet -- package-lock.json; then
+            echo 'No package-lock.json changes required.'
+            exit 0
+          fi
+          git add package-lock.json
+          git commit -m 'chore(jarvis): regenerate package lockfile'
+          git push origin HEAD:${{ inputs.branch }}
