@@ -256,6 +256,26 @@ function PaymentDiagnosisPanel({ result }: { result: unknown }) {
   const latestFailure = diagnosis.recentFailures?.[0];
   const terminalAction = actionStatus === "SUCCEEDED" || actionStatus === "FAILED" || actionStatus === "DENIED";
 
+  async function requestRecoveryApproval() {
+    if (!actionId || actionStatus !== 'RECOVERY_REQUIRED') return;
+    setActionMessage(null);
+    try {
+      const response = await fetch(`/api/jarvis/owner/actions/${encodeURIComponent(actionId)}/resume`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: '{}',
+      });
+      const body = await response.json().catch(() => null);
+      if (!response.ok) throw new Error(body?.message || `Recovery approval request failed (${response.status}).`);
+      setActionStatus(typeof body?.status === 'string' ? body.status : 'RECOVERY_REQUIRED');
+      setRecovery(body?.recovery && typeof body.recovery === 'object' ? body.recovery : recovery);
+      setActionMessage('Payment recovery is now governed by a fresh owner approval.');
+    } catch (error) {
+      setActionMessage(error instanceof Error ? error.message : 'Recovery approval request failed.');
+    }
+  }
+
   async function executeApprovedAction() {
     if (!actionId || actionStatus !== "APPROVED" || executing) return;
     setExecuting(true);
@@ -404,8 +424,30 @@ function PaymentDiagnosisPanel({ result }: { result: unknown }) {
 
           {actionStatus === "RECOVERY_REQUIRED" && recovery && (
             <div className="mt-3 border border-red-400/15 bg-red-950/10 p-3">
-              <div className="font-mono text-[8px] uppercase tracking-[0.16em] text-red-300/75">Recovery Required</div>
+              <div className="flex flex-wrap items-center justify-between gap-2">
+                <div className="font-mono text-[8px] uppercase tracking-[0.16em] text-red-300/75">Recovery Required</div>
+                <div className="font-mono text-[8px] uppercase tracking-[0.14em] text-amber-300/70">{String(recovery.recoveryApprovalStatus ?? 'NOT REQUESTED')}</div>
+              </div>
               <p className="mt-2 font-mono text-[9px] leading-4 text-red-200/55">{String(recovery.reason ?? "Payment action requires governed recovery.")}</p>
+              {Boolean(recovery.plan) && typeof recovery.plan === 'object' && (
+                <div className="mt-3 border-t border-white/[0.04] pt-3">
+                  <div className="font-mono text-[7px] uppercase tracking-[0.14em] text-white/25">Recovery Action</div>
+                  <p className="mt-1 font-mono text-[9px] leading-4 text-white/50">{String((recovery.plan as Record<string, unknown>).reason ?? 'Retry payment failover through the next eligible gateway.')}</p>
+                </div>
+              )}
+              {!recovery.recoveryApprovalId && (
+                <button type="button" onClick={requestRecoveryApproval} className="mt-4 border border-amber-400/25 bg-amber-400/[0.06] px-4 py-2 font-mono text-[8px] uppercase tracking-[0.16em] text-amber-300 transition hover:bg-amber-400/[0.10]">
+                  REQUEST RECOVERY APPROVAL
+                </button>
+              )}
+              {recovery.recoveryApprovalStatus === 'PENDING' && (
+                <div className="mt-3 font-mono text-[8px] uppercase tracking-[0.14em] text-amber-300/65">Recovery approval pending — approve it in Governance / Live.</div>
+              )}
+              {recovery.recoveryApprovalStatus === 'APPROVED' && (
+                <button type="button" onClick={requestRecoveryApproval} className="mt-4 border border-amber-400/30 bg-amber-400/10 px-4 py-2 font-mono text-[8px] uppercase tracking-[0.16em] text-amber-300 transition hover:bg-amber-400/15">
+                  RESUME APPROVED RECOVERY
+                </button>
+              )}
             </div>
           )}
 
