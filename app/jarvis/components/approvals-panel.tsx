@@ -71,11 +71,16 @@ export default function ApprovalsPanel() {
 
   const pending = useMemo(() => actions.filter((action) => action.status === "PENDING_APPROVAL"), [actions]);
 
-  async function transition(id: string, operation: "approve" | "deny" | "execute" | "resume") {
+  async function transition(id: string, operation: "approve" | "deny" | "execute" | "resume" | "approve-recovery") {
     setBusy(`${id}:${operation}`);
     setError(null);
     try {
-      const response = await fetch(`/api/jarvis/owner/actions/${id}/${operation}`, {
+      const action = actions.find((item) => item.id === id);
+      const recoveryApprovalId = operation === "approve-recovery" ? getRecoveryApprovalId(action?.recovery) : null;
+      const endpoint = operation === "approve-recovery" && recoveryApprovalId
+        ? `/api/jarvis/owner/approvals/${recoveryApprovalId}/approve`
+        : `/api/jarvis/owner/actions/${id}/${operation}`;
+      const response = await fetch(endpoint, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: operation === "execute" ? undefined : "{}",
@@ -124,7 +129,19 @@ function QueueMessage({ text, detail }: { text: string; detail?: string }) {
   </div>;
 }
 
-function ActionCard({ action, busy, onTransition }: { action: Action; busy: string | null; onTransition: (id: string, op: "approve" | "deny" | "execute" | "resume") => void }) {
+function getRecoveryApprovalId(value: unknown): string | null {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return null;
+  const id = (value as Record<string, unknown>).recoveryApprovalId;
+  return typeof id === "string" && id ? id : null;
+}
+
+function getRecoveryApprovalStatus(value: unknown): string | null {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return null;
+  const status = (value as Record<string, unknown>).recoveryApprovalStatus;
+  return typeof status === "string" ? status : null;
+}
+
+function ActionCard({ action, busy, onTransition }: { action: Action; busy: string | null; onTransition: (id: string, op: "approve" | "deny" | "execute" | "resume" | "approve-recovery") => void }) {
   const approvalBusy = busy?.startsWith(`${action.id}:`) ?? false;
   const live = ACTIVE.includes(action.status);
   const riskClass = action.riskLevel === "CRITICAL" || action.riskLevel === "HIGH" ? "text-red-300 border-red-400/20 bg-red-950/20" : "text-amber-300 border-amber-400/15 bg-amber-950/10";
@@ -162,7 +179,9 @@ function ActionCard({ action, busy, onTransition }: { action: Action; busy: stri
       {action.status === "APPROVED" && <button disabled={approvalBusy} onClick={() => onTransition(action.id, "execute")} className="border border-amber-400/30 bg-amber-400/10 px-5 py-2 font-mono text-[9px] uppercase tracking-[0.16em] text-amber-300 transition hover:bg-amber-400/15 disabled:opacity-40">{busy === `${action.id}:execute` ? "EXECUTING…" : "EXECUTE APPROVED ACTION"}</button>}
       {live && <span className="px-3 py-2 font-mono text-[9px] uppercase tracking-[0.16em] text-amber-400/65">Provider lifecycle in progress…</span>}
       {action.status === "SUCCEEDED" && <span className="px-3 py-2 font-mono text-[9px] uppercase tracking-[0.16em] text-amber-300">✓ Verified / SUCCEEDED</span>}
-      {action.status === "RECOVERY_REQUIRED" && <button disabled={approvalBusy} onClick={() => onTransition(action.id, "resume")} className="border border-amber-400/30 bg-amber-400/10 px-5 py-2 font-mono text-[9px] uppercase tracking-[0.16em] text-amber-300 transition hover:bg-amber-400/15 disabled:opacity-40">{busy === `${action.id}:resume` ? "RESUMING…" : "RESUME APPROVED RECOVERY"}</button>}
+      {action.status === "RECOVERY_REQUIRED" && getRecoveryApprovalStatus(action.recovery) === "PENDING" && <button disabled={approvalBusy} onClick={() => onTransition(action.id, "approve-recovery")} className="border border-amber-400/30 bg-amber-400/10 px-5 py-2 font-mono text-[9px] uppercase tracking-[0.16em] text-amber-300 transition hover:bg-amber-400/15 disabled:opacity-40">{busy === `${action.id}:approve-recovery` ? "APPROVING RECOVERY…" : "APPROVE RECOVERY"}</button>}
+      {action.status === "RECOVERY_REQUIRED" && getRecoveryApprovalStatus(action.recovery) === "APPROVED" && <button disabled={approvalBusy} onClick={() => onTransition(action.id, "resume")} className="border border-amber-400/30 bg-amber-400/10 px-5 py-2 font-mono text-[9px] uppercase tracking-[0.16em] text-amber-300 transition hover:bg-amber-400/15 disabled:opacity-40">{busy === `${action.id}:resume` ? "RESUMING…" : "RESUME APPROVED RECOVERY"}</button>}
+      {action.status === "RECOVERY_REQUIRED" && getRecoveryApprovalStatus(action.recovery) === "RECOVERY_APPROVAL_REQUIRED" && <button disabled={approvalBusy} onClick={() => onTransition(action.id, "resume")} className="border border-amber-400/30 bg-amber-400/10 px-5 py-2 font-mono text-[9px] uppercase tracking-[0.16em] text-amber-300 transition hover:bg-amber-400/15 disabled:opacity-40">{busy === `${action.id}:resume` ? "REQUESTING…" : "REQUEST RECOVERY APPROVAL"}</button>}
     </div>
   </article>;
 }
