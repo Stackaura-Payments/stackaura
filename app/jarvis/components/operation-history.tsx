@@ -75,7 +75,7 @@ export default function OperationHistory() {
     setLoading(true);
     setError(null);
     try {
-      const response = await fetch("/api/jarvis/owner/operations?limit=25", {
+      const response = await fetch("/api/jarvis/owner/operations?limit=5", {
         credentials: "include",
         cache: "no-store",
       });
@@ -91,12 +91,20 @@ export default function OperationHistory() {
 
   useEffect(() => { void load(); }, [load]);
 
+  useEffect(() => {
+    const timer = window.setInterval(() => { void load(); }, 60_000);
+    return () => window.clearInterval(timer);
+  }, [load]);
+
   return (
     <section className="mt-3 border border-white/[0.06] bg-black/40 p-4 sm:p-5">
       <div className="mb-4 flex items-center justify-between">
         <div>
           <p className="font-mono text-[9px] uppercase tracking-[0.28em] text-amber-500/55">Audit</p>
-          <h2 className="mt-1 text-xs font-medium uppercase tracking-[0.18em] text-white/75">Operational History</h2>
+          <div className="flex items-center gap-2">
+            <h2 className="mt-1 text-xs font-medium uppercase tracking-[0.18em] text-white/75">Operational History</h2>
+            <span className="font-mono text-[7px] uppercase tracking-[0.12em] text-white/20">Last 30 min</span>
+          </div>
         </div>
         <button type="button" onClick={() => void load()} disabled={loading} aria-label="Refresh operation history"
           className="flex h-7 w-7 items-center justify-center border border-white/[0.06] text-white/30 hover:border-amber-400/20 hover:text-amber-400/60 disabled:opacity-30">
