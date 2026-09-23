@@ -187,6 +187,9 @@ function PaymentDiagnosisPanel({ result }: { result: unknown }) {
   const [approvalStatus, setApprovalStatus] = useState<string | null>(null);
   const [actionStatus, setActionStatus] = useState<string | null>(null);
   const [actionMessage, setActionMessage] = useState<string | null>(null);
+  const [verification, setVerification] = useState<Record<string, unknown> | null>(null);
+  const [recovery, setRecovery] = useState<Record<string, unknown> | null>(null);
+  const [executing, setExecuting] = useState(false);
 
   const proposal = diagnosis.proposedActions?.find((action) => action.toolId === "jarvis.owner.payments.failover");
 
@@ -203,6 +206,8 @@ function PaymentDiagnosisPanel({ result }: { result: unknown }) {
         if (!cancelled) {
           setActionStatus(typeof action?.status === "string" ? action.status : null);
           setApprovalStatus(typeof action?.approval?.status === "string" ? action.approval.status : typeof body?.approval?.status === "string" ? body.approval.status : null);
+          setVerification(action?.verification && typeof action.verification === "object" ? action.verification : null);
+          setRecovery(action?.recovery && typeof action.recovery === "object" ? action.recovery : null);
         }
       } catch {
         // Keep the diagnosis usable if lifecycle polling is temporarily unavailable.
@@ -250,6 +255,29 @@ function PaymentDiagnosisPanel({ result }: { result: unknown }) {
   const dominant = diagnosis.dominantFailure;
   const latestFailure = diagnosis.recentFailures?.[0];
   const terminalAction = actionStatus === "SUCCEEDED" || actionStatus === "FAILED" || actionStatus === "DENIED";
+
+  async function executeApprovedAction() {
+    if (!actionId || actionStatus !== "APPROVED" || executing) return;
+    setExecuting(true);
+    setActionMessage(null);
+    try {
+      const response = await fetch(`/api/jarvis/owner/actions/${encodeURIComponent(actionId)}/execute`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+      });
+      const body = await response.json().catch(() => null);
+      if (!response.ok) throw new Error(body?.message || `Execution failed (${response.status}).`);
+      setActionStatus(typeof body?.status === "string" ? body.status : "VERIFYING");
+      setVerification(body?.verification && typeof body.verification === "object" ? body.verification : null);
+      setRecovery(body?.recovery && typeof body.recovery === "object" ? body.recovery : null);
+      setActionMessage("Approved payment action submitted. JARVIS is verifying the gateway result.");
+    } catch (error) {
+      setActionMessage(error instanceof Error ? error.message : "Execution failed.");
+    } finally {
+      setExecuting(false);
+    }
+  }
 
   return (
     <div className="mt-3 space-y-3">
@@ -337,7 +365,55 @@ function PaymentDiagnosisPanel({ result }: { result: unknown }) {
             </div>
           )}
 
-          {actionId && !terminalAction && <div className="mt-2 font-mono text-[8px] uppercase tracking-[0.14em] text-amber-400/50">Governance lifecycle active — execution remains owner-approved.</div>}
+          {actionId && actionStatus === "APPROVED" && (
+            <button
+              type="button"
+              onClick={executeApprovedAction}
+              disabled={executing}
+              className="mt-4 border border-amber-400/30 bg-amber-400/10 px-4 py-2 font-mono text-[8px] uppercase tracking-[0.16em] text-amber-300 transition hover:bg-amber-400/15 disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              {executing ? "EXECUTING…" : "EXECUTE APPROVED ACTION"}
+            </button>
+          )}
+
+          {actionId && actionStatus === "APPROVED" && (
+            <div className="mt-2 font-mono text-[8px] uppercase tracking-[0.14em] text-amber-400/50">
+              Owner approval received. Payment mutation is ready for execution.
+            </div>
+          )}
+
+          {actionStatus === "EXECUTING" || actionStatus === "VERIFYING" ? (
+            <div className="mt-3 border-t border-white/[0.04] pt-3 font-mono text-[8px] uppercase tracking-[0.14em] text-amber-300/65">
+              {actionStatus === "EXECUTING" ? "Gateway failover executing…" : "Gateway operation complete. Independently verifying payment state…"}
+            </div>
+          ) : null}
+
+          {actionStatus === "SUCCEEDED" && verification && (
+            <div className="mt-3 border border-amber-400/15 bg-amber-400/[0.025] p-3">
+              <div className="font-mono text-[8px] uppercase tracking-[0.16em] text-amber-300">✓ Payment Verification</div>
+              <div className="mt-3 grid gap-px border border-white/[0.05] bg-white/[0.05] sm:grid-cols-3">
+                <StatusField label="Verified" value={String(verification.verified ?? false).toUpperCase()} />
+                <StatusField label="Payment State" value={String(verification.status ?? "—")} />
+                <StatusField label="Gateway" value={String(verification.gateway ?? "—")} />
+              </div>
+              <div className="mt-2 font-mono text-[8px] text-white/35">
+                {String(verification.mode ?? "payment-state-and-gateway-attempt")} · {String(verification.checkedAt ?? "—")}
+              </div>
+            </div>
+          )}
+
+          {actionStatus === "RECOVERY_REQUIRED" && recovery && (
+            <div className="mt-3 border border-red-400/15 bg-red-950/10 p-3">
+              <div className="font-mono text-[8px] uppercase tracking-[0.16em] text-red-300/75">Recovery Required</div>
+              <p className="mt-2 font-mono text-[9px] leading-4 text-red-200/55">{String(recovery.reason ?? "Payment action requires governed recovery.")}</p>
+            </div>
+          )}
+
+          {actionId && !terminalAction && actionStatus !== "APPROVED" && (
+            <div className="mt-2 font-mono text-[8px] uppercase tracking-[0.14em] text-amber-400/50">
+              Governance lifecycle active — execution remains owner-approved.
+            </div>
+          )}
         </div>
       )}
     </div>

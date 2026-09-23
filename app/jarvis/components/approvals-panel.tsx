@@ -144,6 +144,10 @@ function getRecoveryApprovalStatus(value: unknown): string | null {
 function ActionCard({ action, busy, onTransition }: { action: Action; busy: string | null; onTransition: (id: string, op: "approve" | "deny" | "execute" | "resume" | "approve-recovery") => void }) {
   const approvalBusy = busy?.startsWith(`${action.id}:`) ?? false;
   const live = ACTIVE.includes(action.status);
+  const isPaymentFailover = action.toolId === "jarvis.owner.payments.failover";
+  const paymentReference = isPaymentFailover && action.arguments && typeof action.arguments === "object" && !Array.isArray(action.arguments)
+    ? String((action.arguments as Record<string, unknown>).reference ?? "—")
+    : null;
   const riskClass = action.riskLevel === "CRITICAL" || action.riskLevel === "HIGH" ? "text-red-300 border-red-400/20 bg-red-950/20" : "text-amber-300 border-amber-400/15 bg-amber-950/10";
   return <article className="border border-white/[0.07] bg-[#050504] p-4">
     <div className="flex flex-wrap items-start justify-between gap-3">
@@ -155,6 +159,12 @@ function ActionCard({ action, busy, onTransition }: { action: Action; busy: stri
         </div>
         <h3 className="mt-3 break-all font-mono text-[11px] uppercase tracking-[0.12em] text-white/85">{labelTool(action.toolId)}</h3>
         <p className="mt-1 text-xs leading-5 text-white/55">{action.intent}</p>
+        {isPaymentFailover && (
+          <div className="mt-2 flex flex-wrap items-center gap-2 font-mono text-[8px] uppercase tracking-[0.14em]">
+            <span className="text-amber-400/65">PAYMENTS / FAILOVER</span>
+            <span className="text-white/25">PAYMENT {paymentReference}</span>
+          </div>
+        )}
       </div>
       {action.approval?.expiresAt && action.status === "PENDING_APPROVAL" && <div className="text-right font-mono text-[8px] uppercase tracking-[0.14em] text-white/25">Expires<br /><span className="text-amber-400/70">{ageText(action.approval.expiresAt)}</span></div>}
     </div>
