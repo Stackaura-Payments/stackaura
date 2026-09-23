@@ -84,6 +84,58 @@ function VercelDeploymentStatus({ result }: { result: unknown }) {
   );
 }
 
+function DiagnosticPanel({ result }: { result: unknown }) {
+  if (!result || typeof result !== "object" || !("diagnosis" in result) || !("evidence" in result)) return null;
+  const d = result as any;
+  const diagnosis = d.diagnosis;
+  const source = d.sourceAnalysis;
+  const evidence = Array.isArray(d.evidence) ? d.evidence : [];
+  const remediation = d.remediation;
+  return (
+    <div className="mt-3 space-y-3">
+      <div className="border border-amber-400/[0.10] bg-amber-400/[0.025] p-3">
+        <div className="mb-3 flex items-center justify-between">
+          <span className="font-mono text-[8px] uppercase tracking-[0.18em] text-amber-400/65">Engineering Diagnosis</span>
+          <span className="font-mono text-[8px] uppercase tracking-[0.14em] text-amber-300/75">{String(diagnosis?.confidence ?? "unknown")} confidence</span>
+        </div>
+        <div className="grid gap-px border border-white/[0.05] bg-white/[0.05] sm:grid-cols-2">
+          <StatusField label="Category" value={String(diagnosis?.category ?? "—")} />
+          <StatusField label="Baseline" value={String(source?.previousKnownGoodCommit ?? "—")} />
+        </div>
+        <div className="mt-px border border-white/[0.05] bg-[#030302] p-3">
+          <div className="font-mono text-[7px] uppercase tracking-[0.12em] text-white/20">Likely Cause</div>
+          <p className="mt-1 font-mono text-[9px] leading-5 text-white/65">{String(diagnosis?.rootCause ?? "—")}</p>
+        </div>
+      </div>
+
+      <div className="border border-white/[0.07] bg-black/30 p-3">
+        <div className="mb-3 font-mono text-[8px] uppercase tracking-[0.16em] text-white/25">Source Correlation</div>
+        <div className="space-y-2 font-mono text-[9px]">
+          <div><span className="text-white/25">REPOSITORY </span><span className="text-white/60">{String(source?.repository ?? "—")}</span></div>
+          <div><span className="text-white/25">CHANGED </span><span className="text-amber-400/65">{Array.isArray(source?.changedFiles) && source.changedFiles.length ? source.changedFiles.join(", ") : "—"}</span></div>
+          <div><span className="text-white/25">RELEVANT </span><span className="text-white/55">{Array.isArray(source?.relevantFiles) && source.relevantFiles.length ? source.relevantFiles.join(", ") : "—"}</span></div>
+        </div>
+        {Array.isArray(source?.fileComparisons) && source.fileComparisons.length > 0 && (
+          <div className="mt-3 space-y-1 border-t border-white/[0.04] pt-3">
+            {source.fileComparisons.map((file: any) => <div key={String(file.path)} className="flex gap-2 font-mono text-[8px]"><span className={file.changed ? "text-amber-400/65" : "text-white/25"}>{file.changed ? "CHANGED" : "UNCHANGED"}</span><span className="text-white/50">{String(file.path)}</span><span className="text-white/20">{String(file.changeSummary ?? "")}</span></div>)}
+          </div>
+        )}
+      </div>
+
+      <div className="border border-white/[0.07] bg-black/30 p-3">
+        <div className="mb-3 font-mono text-[8px] uppercase tracking-[0.16em] text-white/25">Evidence Chain</div>
+        <div className="space-y-2">{evidence.map((item: any, index: number) => <div key={`${String(item.source)}-${index}`} className="border-l border-amber-400/15 pl-2"><div className="font-mono text-[8px] text-amber-400/55">{String(item.source)} · {String(item.confidence)}</div><div className="mt-0.5 font-mono text-[9px] leading-4 text-white/50">{String(item.fact)}</div></div>)}</div>
+      </div>
+
+      <div className="border border-amber-400/[0.10] bg-black/40 p-3">
+        <div className="mb-2 font-mono text-[8px] uppercase tracking-[0.16em] text-amber-400/55">Exact Fix</div>
+        <p className="font-mono text-[9px] leading-5 text-white/65">{String(remediation?.exactFix ?? "—")}</p>
+        {Array.isArray(remediation?.actions) && remediation.actions.length > 0 && <div className="mt-3 space-y-1 border-t border-white/[0.04] pt-3">{remediation.actions.map((action: any, index: number) => <div key={`${String(action.toolId)}-${index}`} className="flex flex-wrap items-center gap-2 font-mono text-[8px]"><span className="text-amber-400/65">{String(action.toolId)}</span><span className="text-white/35">{String(action.intent)}</span>{action.requiresApproval && <span className="text-amber-300">OWNER APPROVAL REQUIRED</span>}</div>)}</div>}
+      </div>
+    </div>
+  );
+}
+
 function RepositoryStatus({ result }: { result: unknown }) {
   if (!result || typeof result !== "object" || !("repository" in result)) {
     return null;
@@ -249,6 +301,7 @@ export default function AskJarvis() {
               {item.succeeded && (
                 <>
                   <VercelDeploymentStatus result={item.result} />
+                  <DiagnosticPanel result={item.result} />
                   <RepositoryStatus result={item.result} />
                 </>
               )}
