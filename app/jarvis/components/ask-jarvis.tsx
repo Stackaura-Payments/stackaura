@@ -163,8 +163,189 @@ function VercelDeploymentStatus({ result }: { result: unknown }) {
   );
 }
 
+type PaymentActionState = "idle" | "creating" | "created" | "error";
+
+function PaymentDiagnosisPanel({ result }: { result: unknown }) {
+  if (!result || typeof result !== "object" || !("diagnosis" in result) || !("proposedActions" in result) || !("totalFailures" in result)) {
+    return null;
+  }
+
+  const diagnosis = result as {
+    merchantId?: string;
+    window?: { minutes?: number; since?: string };
+    totalFailures?: number;
+    diagnosis?: { confidence?: string; category?: string; summary?: string };
+    dominantFailure?: { gateway?: string | null; signature?: string; count?: number; shareOfFailures?: number; firstSeenAt?: string | null; lastSeenAt?: string | null } | null;
+    gatewayComparison?: Array<{ gateway?: string; failures?: number; attempts?: number; failureRate?: number }>;
+    evidence?: string[];
+    recentFailures?: Array<{ reference?: string; gateway?: string | null; signature?: string; createdAt?: string }>;
+    proposedActions?: Array<{ toolId?: string; intent?: string; riskLevel?: string; arguments?: { merchantId?: string; reference?: string }; reason?: string }>;
+  };
+
+  const [actionState, setActionState] = useState<PaymentActionState>("idle");
+  const [actionId, setActionId] = useState<string | null>(null);
+  const [approvalStatus, setApprovalStatus] = useState<string | null>(null);
+  const [actionStatus, setActionStatus] = useState<string | null>(null);
+  const [actionMessage, setActionMessage] = useState<string | null>(null);
+
+  const proposal = diagnosis.proposedActions?.find((action) => action.toolId === "jarvis.owner.payments.failover");
+
+  useEffect(() => {
+    if (!actionId) return;
+    let cancelled = false;
+
+    const load = async () => {
+      try {
+        const response = await fetch(`/api/jarvis/owner/actions/${encodeURIComponent(actionId)}`, { cache: "no-store", credentials: "include" });
+        if (!response.ok) return;
+        const body = await response.json();
+        const action = body?.action ?? body;
+        if (!cancelled) {
+          setActionStatus(typeof action?.status === "string" ? action.status : null);
+          setApprovalStatus(typeof action?.approval?.status === "string" ? action.approval.status : typeof body?.approval?.status === "string" ? body.approval.status : null);
+        }
+      } catch {
+        // Keep the diagnosis usable if lifecycle polling is temporarily unavailable.
+      }
+    };
+
+    void load();
+    const poll = window.setInterval(() => void load(), 2500);
+    return () => {
+      cancelled = true;
+      window.clearInterval(poll);
+    };
+  }, [actionId]);
+
+  async function requestFailoverApproval() {
+    if (!proposal || actionState === "creating" || actionState === "created") return;
+    setActionState("creating");
+    setActionMessage(null);
+
+    try {
+      const actionIndex = diagnosis.proposedActions?.indexOf(proposal) ?? 0;
+      const response = await fetch("/api/jarvis/owner/payments/actions/from-diagnosis", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ diagnosis: result, actionIndex }),
+      });
+      const body = await response.json().catch(() => null);
+      if (!response.ok) throw new Error(body?.message || `Failover approval request failed (${response.status}).`);
+
+      const createdAction = body?.action ?? body;
+      const createdActionId = createdAction?.id;
+      setActionState("created");
+      setActionId(typeof createdActionId === "string" ? createdActionId : null);
+      setApprovalStatus(typeof body?.approval?.status === "string" ? body.approval.status : "PENDING");
+      setActionStatus(typeof createdAction?.status === "string" ? createdAction.status : "PENDING_APPROVAL");
+      setActionMessage(typeof createdActionId === "string" ? `Failover action ${createdActionId} is awaiting owner approval.` : "Failover action is awaiting owner approval.");
+    } catch (error) {
+      setActionState("error");
+      setActionMessage(error instanceof Error ? error.message : "Failover approval request failed.");
+    }
+  }
+
+  const confidence = diagnosis.diagnosis?.confidence ?? "unknown";
+  const dominant = diagnosis.dominantFailure;
+  const latestFailure = diagnosis.recentFailures?.[0];
+  const terminalAction = actionStatus === "SUCCEEDED" || actionStatus === "FAILED" || actionStatus === "DENIED";
+
+  return (
+    <div className="mt-3 space-y-3">
+      <div className="border border-amber-400/[0.10] bg-amber-400/[0.025] p-3">
+        <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
+          <span className="font-mono text-[8px] uppercase tracking-[0.18em] text-amber-400/65">Payment Diagnosis</span>
+          <span className="font-mono text-[8px] uppercase tracking-[0.14em] text-amber-300/75">{confidence} confidence</span>
+        </div>
+        <div className="grid gap-px border border-white/[0.05] bg-white/[0.05] sm:grid-cols-4">
+          <StatusField label="Failures" value={String(diagnosis.totalFailures ?? 0)} />
+          <StatusField label="Window" value={`${String(diagnosis.window?.minutes ?? "—")} MIN`} />
+          <StatusField label="Category" value={String(diagnosis.diagnosis?.category ?? "—")} />
+          <StatusField label="Gateway" value={String(dominant?.gateway ?? "—")} />
+        </div>
+        <div className="mt-px border border-white/[0.05] bg-[#030302] p-3">
+          <div className="font-mono text-[7px] uppercase tracking-[0.12em] text-white/20">Assessment</div>
+          <p className="mt-1 font-mono text-[9px] leading-5 text-white/65">{String(diagnosis.diagnosis?.summary ?? "—")}</p>
+        </div>
+      </div>
+
+      {dominant && (
+        <div className="border border-white/[0.07] bg-black/30 p-3">
+          <div className="mb-3 font-mono text-[8px] uppercase tracking-[0.16em] text-white/25">Dominant Failure</div>
+          <div className="grid gap-px border border-white/[0.05] bg-white/[0.05] sm:grid-cols-4">
+            <StatusField label="Signature" value={String(dominant.signature ?? "—")} />
+            <StatusField label="Occurrences" value={String(dominant.count ?? 0)} />
+            <StatusField label="Share" value={`${String(dominant.shareOfFailures ?? 0)}%`} />
+            <StatusField label="Gateway" value={String(dominant.gateway ?? "—")} />
+          </div>
+        </div>
+      )}
+
+      {Array.isArray(diagnosis.gatewayComparison) && diagnosis.gatewayComparison.length > 0 && (
+        <div className="border border-white/[0.07] bg-black/30 p-3">
+          <div className="mb-3 font-mono text-[8px] uppercase tracking-[0.16em] text-white/25">Gateway Comparison</div>
+          <div className="space-y-1">
+            {diagnosis.gatewayComparison.map((gateway) => (
+              <div key={String(gateway.gateway)} className="grid grid-cols-4 gap-2 border-b border-white/[0.03] py-1.5 font-mono text-[8px]">
+                <span className="text-white/55">{String(gateway.gateway ?? "—")}</span>
+                <span className="text-white/35">{String(gateway.failures ?? 0)} failures</span>
+                <span className="text-white/35">{String(gateway.attempts ?? 0)} attempts</span>
+                <span className="text-amber-400/55">{String(gateway.failureRate ?? 0)}%</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      <div className="border border-white/[0.07] bg-black/30 p-3">
+        <div className="mb-3 font-mono text-[8px] uppercase tracking-[0.16em] text-white/25">Evidence</div>
+        <div className="space-y-2">
+          {(diagnosis.evidence ?? []).map((fact, index) => (
+            <div key={`${fact}-${index}`} className="border-l border-amber-400/15 pl-2 font-mono text-[9px] leading-4 text-white/50">{fact}</div>
+          ))}
+        </div>
+      </div>
+
+      {proposal && (
+        <div className="border border-amber-400/[0.10] bg-black/40 p-3">
+          <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
+            <span className="font-mono text-[8px] uppercase tracking-[0.16em] text-amber-400/55">Proposed Action</span>
+            <span className="font-mono text-[8px] uppercase tracking-[0.14em] text-amber-300">{String(proposal.riskLevel ?? "HIGH")} RISK</span>
+          </div>
+          <div className="grid gap-px border border-white/[0.05] bg-white/[0.05] sm:grid-cols-2">
+            <StatusField label="Operation" value="Gateway Failover" />
+            <StatusField label="Payment" value={String(proposal.arguments?.reference ?? latestFailure?.reference ?? "—")} />
+            <StatusField label="Gateway" value={String(latestFailure?.gateway ?? dominant?.gateway ?? "—")} />
+            <StatusField label="Tool" value={String(proposal.toolId ?? "—")} />
+          </div>
+          <p className="mt-3 font-mono text-[9px] leading-5 text-white/50">{String(proposal.reason ?? "A governed gateway failover has been proposed.")}</p>
+
+          {actionState !== "created" && (
+            <button type="button" onClick={requestFailoverApproval} disabled={actionState === "creating"} className="mt-4 border border-amber-400/20 bg-amber-400/[0.05] px-3 py-2 font-mono text-[8px] uppercase tracking-[0.16em] text-amber-300 transition hover:border-amber-400/40 hover:bg-amber-400/[0.09] disabled:cursor-not-allowed disabled:opacity-50">
+              {actionState === "creating" ? "REQUESTING APPROVAL…" : "REQUEST FAILOVER APPROVAL"}
+            </button>
+          )}
+
+          {actionMessage && <div className={`mt-3 border-t border-white/[0.04] pt-3 font-mono text-[8px] ${actionState === "error" ? "text-red-300/70" : "text-white/45"}`}>{actionMessage}</div>}
+
+          {actionId && (
+            <div className="mt-3 grid gap-px border border-white/[0.05] bg-white/[0.05] sm:grid-cols-3">
+              <StatusField label="Action ID" value={actionId} />
+              <StatusField label="Action Status" value={String(actionStatus ?? "—")} />
+              <StatusField label="Approval" value={String(approvalStatus ?? "—")} />
+            </div>
+          )}
+
+          {actionId && !terminalAction && <div className="mt-2 font-mono text-[8px] uppercase tracking-[0.14em] text-amber-400/50">Governance lifecycle active — execution remains owner-approved.</div>}
+        </div>
+      )}
+    </div>
+  );
+}
+
 function DiagnosticPanel({ result }: { result: unknown }) {
-  if (!result || typeof result !== "object" || !("diagnosis" in result) || !("evidence" in result)) return null;
+  if (!result || typeof result !== "object" || !("diagnosis" in result) || !("evidence" in result) || !("sourceAnalysis" in result)) return null;
   const d = result as any;
   const diagnosis = d.diagnosis;
   const source = d.sourceAnalysis;
@@ -419,6 +600,7 @@ export default function AskJarvis() {
               {item.succeeded && (
                 <>
                   <VercelDeploymentStatus result={item.result} />
+                  <PaymentDiagnosisPanel result={item.result} />
                   <DiagnosticPanel result={item.result} />
                   <RepositoryStatus result={item.result} />
                 </>
