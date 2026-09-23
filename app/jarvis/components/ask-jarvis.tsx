@@ -177,6 +177,7 @@ function PaymentDiagnosisPanel({ result }: { result: unknown }) {
     diagnosis?: { confidence?: string; category?: string; summary?: string };
     dominantFailure?: { gateway?: string | null; signature?: string; count?: number; shareOfFailures?: number; firstSeenAt?: string | null; lastSeenAt?: string | null } | null;
     gatewayComparison?: Array<{ gateway?: string; failures?: number; attempts?: number; failureRate?: number }>;
+    routingIntelligence?: { recommendedGateway?: string | null; rankedGateways?: string[]; explanation?: string; evidence?: string[] };
     evidence?: string[];
     recentFailures?: Array<{ reference?: string; gateway?: string | null; signature?: string; createdAt?: string }>;
     proposedActions?: Array<{ toolId?: string; intent?: string; riskLevel?: string; arguments?: { merchantId?: string; reference?: string }; reason?: string }>;
@@ -343,6 +344,34 @@ function PaymentDiagnosisPanel({ result }: { result: unknown }) {
               </div>
             ))}
           </div>
+        </div>
+      )}
+
+      {diagnosis.routingIntelligence && (
+        <div className="border border-amber-400/[0.10] bg-amber-400/[0.025] p-3">
+          <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
+            <span className="font-mono text-[8px] uppercase tracking-[0.16em] text-amber-400/65">Routing Memory</span>
+            <span className="font-mono text-[8px] uppercase tracking-[0.14em] text-amber-300/75">
+              NEXT: {String(diagnosis.routingIntelligence.recommendedGateway ?? "CONFIGURED PRIORITY")}
+            </span>
+          </div>
+          <p className="font-mono text-[9px] leading-5 text-white/60">{String(diagnosis.routingIntelligence.explanation ?? "Historical gateway performance was considered.")}</p>
+          {Array.isArray(diagnosis.routingIntelligence.rankedGateways) && diagnosis.routingIntelligence.rankedGateways.length > 0 && (
+            <div className="mt-3 flex flex-wrap gap-2">
+              {diagnosis.routingIntelligence.rankedGateways.map((gateway) => (
+                <span key={String(gateway)} className="border border-white/[0.07] px-2 py-1 font-mono text-[7px] uppercase tracking-[0.12em] text-white/40">
+                  {String(gateway)}
+                </span>
+              ))}
+            </div>
+          )}
+          {Array.isArray(diagnosis.routingIntelligence.evidence) && diagnosis.routingIntelligence.evidence.length > 0 && (
+            <div className="mt-3 space-y-1.5 border-t border-white/[0.04] pt-3">
+              {diagnosis.routingIntelligence.evidence.slice(0, 3).map((fact, index) => (
+                <div key={String(fact) + "-" + index} className="border-l border-amber-400/15 pl-2 font-mono text-[8px] leading-4 text-white/40">{String(fact)}</div>
+              ))}
+            </div>
+          )}
         </div>
       )}
 
