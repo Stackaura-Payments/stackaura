@@ -71,7 +71,7 @@ export default function ApprovalsPanel() {
 
   const pending = useMemo(() => actions.filter((action) => action.status === "PENDING_APPROVAL"), [actions]);
 
-  async function transition(id: string, operation: "approve" | "deny" | "execute") {
+  async function transition(id: string, operation: "approve" | "deny" | "execute" | "resume") {
     setBusy(`${id}:${operation}`);
     setError(null);
     try {
@@ -124,7 +124,7 @@ function QueueMessage({ text, detail }: { text: string; detail?: string }) {
   </div>;
 }
 
-function ActionCard({ action, busy, onTransition }: { action: Action; busy: string | null; onTransition: (id: string, op: "approve" | "deny" | "execute") => void }) {
+function ActionCard({ action, busy, onTransition }: { action: Action; busy: string | null; onTransition: (id: string, op: "approve" | "deny" | "execute" | "resume") => void }) {
   const approvalBusy = busy?.startsWith(`${action.id}:`) ?? false;
   const live = ACTIVE.includes(action.status);
   const riskClass = action.riskLevel === "CRITICAL" || action.riskLevel === "HIGH" ? "text-red-300 border-red-400/20 bg-red-950/20" : "text-amber-300 border-amber-400/15 bg-amber-950/10";
@@ -162,7 +162,7 @@ function ActionCard({ action, busy, onTransition }: { action: Action; busy: stri
       {action.status === "APPROVED" && <button disabled={approvalBusy} onClick={() => onTransition(action.id, "execute")} className="border border-amber-400/30 bg-amber-400/10 px-5 py-2 font-mono text-[9px] uppercase tracking-[0.16em] text-amber-300 transition hover:bg-amber-400/15 disabled:opacity-40">{busy === `${action.id}:execute` ? "EXECUTING…" : "EXECUTE APPROVED ACTION"}</button>}
       {live && <span className="px-3 py-2 font-mono text-[9px] uppercase tracking-[0.16em] text-amber-400/65">Provider lifecycle in progress…</span>}
       {action.status === "SUCCEEDED" && <span className="px-3 py-2 font-mono text-[9px] uppercase tracking-[0.16em] text-amber-300">✓ Verified / SUCCEEDED</span>}
-      {action.status === "RECOVERY_REQUIRED" && <span className="px-3 py-2 font-mono text-[9px] uppercase tracking-[0.16em] text-red-300">Recovery required</span>}
+      {action.status === "RECOVERY_REQUIRED" && <button disabled={approvalBusy} onClick={() => onTransition(action.id, "resume")} className="border border-amber-400/30 bg-amber-400/10 px-5 py-2 font-mono text-[9px] uppercase tracking-[0.16em] text-amber-300 transition hover:bg-amber-400/15 disabled:opacity-40">{busy === `${action.id}:resume` ? "RESUMING…" : "RESUME APPROVED RECOVERY"}</button>}
     </div>
   </article>;
 }
