@@ -9,6 +9,7 @@ import AgentsPanel from "./components/agents-panel";
 import ApprovalsPanel from "./components/approvals-panel";
 import AskJarvis from "./components/ask-jarvis";
 import OperationHistory from "./components/operation-history";
+import VoiceAgent from "./components/voice-agent";
 
 export default function JarvisShell() {
   return (
@@ -130,6 +131,7 @@ export default function JarvisShell() {
 
             <SystemLog />
             <OperationHistory />
+            <VoiceAgent />
             <AgentsPanel />
             <ApprovalsPanel />
             <AskJarvis />
