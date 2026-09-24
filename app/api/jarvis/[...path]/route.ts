@@ -17,6 +17,9 @@ const FORWARDED_REQUEST_HEADERS = [
 const FORWARDED_RESPONSE_HEADERS = [
   "content-type",
   "cache-control",
+  "content-length",
+  "content-range",
+  "accept-ranges",
 ];
 
 async function proxyJarvisRequest(
@@ -74,9 +77,7 @@ async function proxyJarvisRequest(
     );
   }
 
-  const responseBody = await upstream.arrayBuffer();
-
-  const response = new NextResponse(responseBody, {
+  const response = new NextResponse(upstream.body, {
     status: upstream.status,
   });
 

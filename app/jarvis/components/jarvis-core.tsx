@@ -1,7 +1,9 @@
+import { useState } from "react";
 import { StatusDot } from "./status-dot";
 import VoiceAgent from "./voice-agent";
+import type { JarvisVoiceState } from "./voice-agent";
 
-function CoreOrb() {
+function CoreOrb({ state }: { state: JarvisVoiceState }) {
   return (
     <div className="relative flex h-[280px] w-[280px] items-center justify-center sm:h-[390px] sm:w-[390px]">
       {/* Outer targeting rings */}
@@ -25,7 +27,7 @@ function CoreOrb() {
       <div className="absolute h-[150px] w-[150px] rounded-full bg-amber-400/[0.045] blur-3xl" />
 
       {/* Inner intelligence field */}
-      <div className="relative flex h-[112px] w-[112px] items-center justify-center rounded-full border border-amber-300/25 bg-[radial-gradient(circle,rgba(245,158,11,0.13),rgba(245,158,11,0.025)_45%,transparent_72%)] shadow-[0_0_70px_rgba(245,158,11,0.10),inset_0_0_40px_rgba(245,158,11,0.06)]">
+      <div className={`relative flex h-[112px] w-[112px] items-center justify-center rounded-full border border-amber-300/25 bg-[radial-gradient(circle,rgba(245,158,11,0.13),rgba(245,158,11,0.025)_45%,transparent_72%)] shadow-[0_0_70px_rgba(245,158,11,0.10),inset_0_0_40px_rgba(245,158,11,0.06)] ${state === "SPEAKING" ? "shadow-[0_0_100px_rgba(245,158,11,0.24)]" : state === "LISTENING" ? "shadow-[0_0_90px_rgba(245,158,11,0.18)]" : ""}`} >
         <div className="absolute h-2 w-2 animate-pulse rounded-full bg-amber-300 shadow-[0_0_25px_rgba(245,158,11,1)]" />
         <div className="absolute h-[46px] w-[46px] rounded-full border border-amber-300/20" />
         <div className="absolute h-[72px] w-[72px] rounded-full border border-amber-400/[0.08]" />
@@ -47,6 +49,8 @@ function CoreOrb() {
 }
 
 export default function JarvisCore() {
+  const [voiceState, setVoiceState] = useState<JarvisVoiceState>("STANDBY");
+
   return (
     <section className="relative flex min-h-[470px] flex-col items-center justify-center overflow-hidden border border-amber-400/[0.09] bg-black/30 px-4 py-8 sm:min-h-[540px]">
       <div className="absolute left-4 top-4 font-mono text-[8px] uppercase tracking-[0.24em] text-white/20">
@@ -54,14 +58,14 @@ export default function JarvisCore() {
       </div>
 
       <div className="absolute right-4 top-4 font-mono text-[8px] uppercase tracking-[0.24em] text-amber-400/35">
-        SCANNING
+        {voiceState}
       </div>
 
       <div className="mb-1 font-mono text-[9px] uppercase tracking-[0.34em] text-amber-400/50">
         Central Intelligence
       </div>
 
-      <CoreOrb />
+      <CoreOrb state={voiceState} />
 
       <div className="mt-[-5px] text-center">
         <div className="text-sm font-medium uppercase tracking-[0.3em] text-white">
@@ -70,12 +74,12 @@ export default function JarvisCore() {
 
         <div className="mt-2 flex items-center justify-center gap-2 font-mono text-[9px] uppercase tracking-[0.16em] text-amber-400/55">
           <StatusDot tone="amber" />
-          Intelligence engine active
+          {voiceState === "STANDBY" ? "Intelligence engine active" : "Voice channel / " + voiceState}
         </div>
       </div>
 
       <div className="mt-5 w-full max-w-[520px]">
-        <VoiceAgent />
+        <VoiceAgent onStateChange={setVoiceState} />
       </div>
 
       <div className="mt-7 grid w-full max-w-[390px] grid-cols-3 border border-white/[0.05] bg-black/30">
