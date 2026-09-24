@@ -9,7 +9,6 @@ import AgentsPanel from "./components/agents-panel";
 import ApprovalsPanel from "./components/approvals-panel";
 import AskJarvis from "./components/ask-jarvis";
 import OperationHistory from "./components/operation-history";
-import VoiceAgent from "./components/voice-agent";
 
 export default function JarvisShell() {
   return (
@@ -50,8 +49,8 @@ export default function JarvisShell() {
                 <PaymentNetworkPanel />
               </div>
 
-              {/* CORE */}
-              <div className="order-1 xl:order-2">
+              {/* CENTRAL INTELLIGENCE */}
+              <div className="order-1 flex min-w-0 flex-col gap-3 xl:order-2">
                 <JarvisCore />
               </div>
 
@@ -131,7 +130,6 @@ export default function JarvisShell() {
 
             <SystemLog />
             <OperationHistory />
-            <VoiceAgent />
             <AgentsPanel />
             <ApprovalsPanel />
             <AskJarvis />

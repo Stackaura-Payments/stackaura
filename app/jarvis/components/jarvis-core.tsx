@@ -1,4 +1,5 @@
 import { StatusDot } from "./status-dot";
+import VoiceAgent from "./voice-agent";
 
 function CoreOrb() {
   return (
@@ -71,6 +72,10 @@ export default function JarvisCore() {
           <StatusDot tone="amber" />
           Intelligence engine active
         </div>
+      </div>
+
+      <div className="mt-5 w-full max-w-[520px]">
+        <VoiceAgent />
       </div>
 
       <div className="mt-7 grid w-full max-w-[390px] grid-cols-3 border border-white/[0.05] bg-black/30">
