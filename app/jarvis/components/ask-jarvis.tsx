@@ -177,7 +177,20 @@ function PaymentDiagnosisPanel({ result }: { result: unknown }) {
     diagnosis?: { confidence?: string; category?: string; summary?: string };
     dominantFailure?: { gateway?: string | null; signature?: string; count?: number; shareOfFailures?: number; firstSeenAt?: string | null; lastSeenAt?: string | null } | null;
     gatewayComparison?: Array<{ gateway?: string; failures?: number; attempts?: number; failureRate?: number }>;
-    routingIntelligence?: { recommendedGateway?: string | null; rankedGateways?: string[]; explanation?: string; evidence?: string[] };
+    routingIntelligence?: {
+      recommendedGateway?: string | null;
+      rankedGateways?: string[];
+      explanation?: string;
+      evidence?: string[];
+      learning?: {
+        model?: string;
+        halfLifeHours?: number;
+        confidence?: string;
+        postFailoverSignals?: number;
+        successfulRecoveries?: number;
+        failedRecoveries?: number;
+      };
+    };
     evidence?: string[];
     recentFailures?: Array<{ reference?: string; gateway?: string | null; signature?: string; createdAt?: string }>;
     proposedActions?: Array<{ toolId?: string; intent?: string; riskLevel?: string; arguments?: { merchantId?: string; reference?: string }; reason?: string }>;
@@ -370,6 +383,14 @@ function PaymentDiagnosisPanel({ result }: { result: unknown }) {
               {diagnosis.routingIntelligence.evidence.slice(0, 3).map((fact, index) => (
                 <div key={String(fact) + "-" + index} className="border-l border-amber-400/15 pl-2 font-mono text-[8px] leading-4 text-white/40">{String(fact)}</div>
               ))}
+            </div>
+          )}
+          {diagnosis.routingIntelligence.learning && (
+            <div className="mt-3 grid gap-px border border-white/[0.05] bg-white/[0.05] sm:grid-cols-4">
+              <StatusField label="Learning" value={String(diagnosis.routingIntelligence.learning.model ?? "—")} />
+              <StatusField label="Half Life" value={String(diagnosis.routingIntelligence.learning.halfLifeHours ?? "—") + "h"} />
+              <StatusField label="Confidence" value={String(diagnosis.routingIntelligence.learning.confidence ?? "—")} />
+              <StatusField label="Recoveries" value={String(diagnosis.routingIntelligence.learning.successfulRecoveries ?? 0) + "/" + String(diagnosis.routingIntelligence.learning.postFailoverSignals ?? 0)} />
             </div>
           )}
         </div>
