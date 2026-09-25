@@ -152,17 +152,8 @@ export default function VoiceAgent({ onStateChange }: VoiceAgentProps) {
         recognitionRef.current = null;
       }
 
-      // Browser Speech Recognition is single-turn here by design. The next
-      // turn starts only after J.A.R.V.I.S. finishes speaking, so its own
-      // Fish Audio output is never fed back into the microphone.
-      if (
-        activeRef.current &&
-        !mutedRef.current &&
-        !processingRef.current &&
-        sessionId === sessionIdRef.current
-      ) {
-        window.setTimeout(() => beginListening(sessionId), 100);
-      }
+      // Explicit-turn mode: never automatically reopen the microphone.
+      // The owner must press START VOICE for each new turn.
     };
 
     recognitionRef.current = recognition;
@@ -188,18 +179,18 @@ export default function VoiceAgent({ onStateChange }: VoiceAgentProps) {
     }
   }
 
-  function resumeListening(sessionId: number) {
+  function finishTurn(sessionId: number) {
+    if (sessionId !== sessionIdRef.current) return;
+
     processingRef.current = false;
+    activeRef.current = false;
+    mutedRef.current = false;
 
-    if (
-      !activeRef.current ||
-      mutedRef.current ||
-      sessionId !== sessionIdRef.current
-    ) {
-      return;
-    }
-
-    beginListening(sessionId);
+    setActive(false);
+    setMuted(false);
+    stopRecognition();
+    updateState("STANDBY");
+    setTranscript("VOICE TURN COMPLETE. PRESS START VOICE FOR THE NEXT TURN.");
   }
 
   async function playFishStream(response: Response) {
@@ -250,14 +241,14 @@ export default function VoiceAgent({ onStateChange }: VoiceAgentProps) {
     }
 
     await playFishStream(response);
-    resumeListening(sessionId);
+    finishTurn(sessionId);
   }
 
   async function sendToCore(text: string, sessionId: number) {
     const message = text.trim();
 
     if (!message) {
-      resumeListening(sessionId);
+      finishTurn(sessionId);
       return;
     }
 
@@ -305,6 +296,11 @@ export default function VoiceAgent({ onStateChange }: VoiceAgentProps) {
         return;
       }
 
+      stopRecognition();
+      activeRef.current = false;
+      mutedRef.current = false;
+      setActive(false);
+      setMuted(false);
       updateState("FAULT");
       setError(
         cause instanceof Error
