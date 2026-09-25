@@ -76,72 +76,24 @@ export default function VoiceAgent({ onStateChange }: VoiceAgentProps) {
     if (!audioRef.current) audioRef.current = new Audio();
     const audio = audioRef.current;
 
-    if (
-      "MediaSource" in window &&
-      typeof MediaSource.isTypeSupported === "function" &&
-      MediaSource.isTypeSupported("audio/mpeg")
-    ) {
-      await playMediaSource(response, audio);
-      return;
-    }
-
+    // Fish REST returns a complete MP3 response. Use a Blob URL here rather
+    // than MediaSource: MSE/MP3 support is not consistent across browsers,
+    // and playback should begin only after the audio element has a real source.
     const blob = await response.blob();
     const url = URL.createObjectURL(blob);
     audio.src = url;
-    await audio.play();
-    await new Promise<void>((resolve) => {
-      audio.onended = () => {
-        URL.revokeObjectURL(url);
-        resolve();
-      };
-    });
-  }
 
-  async function playMediaSource(response: Response, audio: HTMLAudioElement) {
-    const mediaSource = new MediaSource();
-    const url = URL.createObjectURL(mediaSource);
-    audio.src = url;
-
-    await new Promise<void>((resolve, reject) => {
-      mediaSource.addEventListener("sourceopen", () => resolve(), { once: true });
-      mediaSource.addEventListener("error", () => reject(new Error("Audio stream failed.")), {
-        once: true,
+    try {
+      await audio.play();
+      await new Promise<void>((resolve, reject) => {
+        audio.onended = () => resolve();
+        audio.onerror = () => reject(new Error("Fish Audio playback failed."));
       });
-    });
-
-    const sourceBuffer = mediaSource.addSourceBuffer("audio/mpeg");
-    const reader = response.body!.getReader();
-
-    const append = async (chunk: Uint8Array) => {
-      if (sourceBuffer.updating) {
-        await new Promise<void>((resolve) =>
-          sourceBuffer.addEventListener("updateend", () => resolve(), { once: true }),
-        );
-      }
-      const buffer = new Uint8Array(chunk).slice().buffer;
-      sourceBuffer.appendBuffer(buffer);
-      if (sourceBuffer.updating) {
-        await new Promise<void>((resolve) =>
-          sourceBuffer.addEventListener("updateend", () => resolve(), { once: true }),
-        );
-      }
-    };
-
-    await audio.play();
-
-    while (true) {
-      const { done, value } = await reader.read();
-      if (done) break;
-      if (value) await append(value);
+    } finally {
+      URL.revokeObjectURL(url);
+      audio.removeAttribute("src");
+      audio.load();
     }
-
-    if (mediaSource.readyState === "open") mediaSource.endOfStream();
-    await new Promise<void>((resolve) => {
-      if (audio.ended) resolve();
-      else audio.addEventListener("ended", () => resolve(), { once: true });
-    });
-
-    URL.revokeObjectURL(url);
   }
 
   async function speak(text: string) {
