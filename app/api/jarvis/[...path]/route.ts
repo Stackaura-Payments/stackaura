@@ -66,6 +66,7 @@ async function proxyJarvisRequest(
           ? undefined
           : await req.arrayBuffer(),
       cache: "no-store",
+      signal: AbortSignal.timeout(20_000),
     });
   } catch {
     return NextResponse.json(
