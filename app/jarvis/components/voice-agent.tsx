@@ -37,6 +37,9 @@ export default function VoiceAgent({ onStateChange }: VoiceAgentProps) {
   const recognitionRef = useRef<SpeechRecognitionLike | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const activeRef = useRef(false);
+  const mutedRef = useRef(false);
+  const processingRef = useRef(false);
+  const sessionIdRef = useRef(0);
   const [active, setActive] = useState(false);
   const [muted, setMuted] = useState(false);
   const [state, setState] = useState<JarvisVoiceState>("STANDBY");
@@ -49,6 +52,268 @@ export default function VoiceAgent({ onStateChange }: VoiceAgentProps) {
 
   useEffect(() => {
     return () => {
+      activeRef.current = false;
+      sessionIdRef.current += 1;
+      recognitionRef.current?.stop();
+      audioRef.current?.pause();
+      audioRef.current?.removeAttribute("src");
+    };
+  }, []);
+
+  function updateState(next: JarvisVoiceState) {
+    setState(next);
+    onStateChange?.(next);
+  }
+
+  function getRecognition(): SpeechRecognitionLike | null {
+    const scope = window as any;
+    const Recognition =
+      (scope.SpeechRecognition ??
+        scope.webkitSpeechRecognition) as SpeechRecognitionConstructor | undefined;
+
+    return Recognition ? new Recognition() : null;
+  }
+
+  function stopRecognition() {
+    recognitionRef.current?.stop();
+    recognitionRef.current = null;
+  }
+
+  function beginListening(sessionId: number) {
+    if (
+      !activeRef.current ||
+      mutedRef.current ||
+      processingRef.current ||
+      recognitionRef.current ||
+      sessionId !== sessionIdRef.current
+    ) {
+      return;
+    }
+
+    const recognition = getRecognition();
+    if (!recognition) {
+      setError("This browser does not provide Speech Recognition. Use a supported Chromium browser.");
+      updateState("FAULT");
+      return;
+    }
+
+    recognition.continuous = false;
+    recognition.interimResults = true;
+    recognition.lang = "en-ZA";
+
+    recognition.onresult = (event) => {
+      let finalText = "";
+      let interim = "";
+
+      for (let index = event.resultIndex; index < event.results.length; index += 1) {
+        const result = event.results[index];
+        if (result.isFinal) finalText += result[0]?.transcript ?? "";
+        else interim += result[0]?.transcript ?? "";
+      }
+
+      if (interim && !processingRef.current) {
+        updateState("LISTENING");
+        setTranscript(interim.toUpperCase());
+      }
+
+      if (finalText.trim() && !processingRef.current) {
+        const message = finalText.trim();
+        processingRef.current = true;
+        stopRecognition();
+        setTranscript(message.toUpperCase());
+        void sendToCore(message, sessionId);
+      }
+    };
+
+    recognition.onerror = (event) => {
+      if (event?.error === "aborted") return;
+      if (!activeRef.current || sessionId !== sessionIdRef.current) return;
+
+      setError(event?.error ? `Voice input error: ${event.error}` : "Voice input failed.");
+      processingRef.current = false;
+      updateState("FAULT");
+    };
+
+    recognition.onend = () => {
+      if (recognitionRef.current === recognition) {
+        recognitionRef.current = null;
+      }
+
+      // SpeechRecognition is intentionally single-turn. The session controller
+      // starts the next turn after JARVIS finishes speaking, preventing the
+      // microphone from capturing JARVIS's own Fish Audio output.
+    };
+
+    recognitionRef.current = recognition;
+    updateState("LISTENING");
+    setTranscript("LISTENING…");
+
+    try {
+      recognition.start();
+    } catch (cause) {
+      recognitionRef.current = null;
+      if (cause instanceof DOMException && cause.name === "InvalidStateError") {
+        window.setTimeout(() => beginListening(sessionId), 150);
+        return;
+      }
+      setError(cause instanceof Error ? cause.message : "Voice input could not start.");
+      updateState("FAULT");
+    }
+  }
+
+  function resumeListening(sessionId: number) {
+    processingRef.current = false;
+
+    if (!activeRef.current || mutedRef.current || sessionId !== sessionIdRef.current) {
+      return;
+    }
+
+    beginListening(sessionId);
+  }
+
+  async function playFishStream(response: Response) {
+    if (!response.body) throw new Error("Fish Audio returned no audio stream.");
+
+    if (!audioRef.current) audioRef.current = new Audio();
+    const audio = audioRef.current;
+
+    const blob = await response.blob();
+    const url = URL.createObjectURL(blob);
+    audio.src = url;
+
+    try {
+      await audio.play();
+      await new Promise<void>((resolve, reject) => {
+        audio.onended = () => resolve();
+        audio.onerror = () => reject(new Error("Fish Audio playback failed."));
+      });
+    } finally {
+      URL.revokeObjectURL(url);
+      audio.removeAttribute("src");
+      audio.load();
+    }
+  }
+
+  async function speak(text: string, sessionId: number) {
+    updateState("SPEAKING");
+    setTranscript("J.A.R.V.I.S. IS SPEAKING…");
+
+    const response = await fetch("/api/jarvis/owner/voice/speak", {
+      method: "POST",
+      credentials: "include",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ text }),
+    });
+
+    if (!response.ok) {
+      const payload = await response.json().catch(() => ({}));
+      throw new Error(payload?.message ?? "Fish Audio speech synthesis failed.");
+    }
+
+    await playFishStream(response);
+    resumeListening(sessionId);
+  }
+
+  async function sendToCore(text: string, sessionId: number) {
+    const message = text.trim();
+    if (!message) {
+      resumeListening(sessionId);
+      return;
+    }
+
+    updateState("THINKING");
+    setTranscript("J.A.R.V.I.S. CORE IS THINKING…");
+
+    try {
+      const response = await fetch("/api/jarvis/ask", {
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message }),
+      });
+      const payload = await response.json().catch(() => ({}));
+
+      if (!response.ok) {
+        throw new Error(payload?.message ?? "JARVIS Core request failed.");
+      }
+
+      if (payload.requiresApproval) {
+        updateState("WAITING FOR APPROVAL");
+        setTranscript("OWNER APPROVAL REQUIRED.");
+      } else if (Array.isArray(payload.actions) && payload.actions.length > 0) {
+        updateState("ACTING");
+        setTranscript("J.A.R.V.I.S. IS ACTING…");
+        await new Promise((resolve) => setTimeout(resolve, 150));
+        updateState("VERIFYING");
+        setTranscript("VERIFYING CORE RESULT…");
+      }
+
+      await speak(payload.message ?? "J.A.R.V.I.S. completed the request.", sessionId);
+    } catch (cause) {
+      processingRef.current = false;
+      if (!activeRef.current || sessionId !== sessionIdRef.current) return;
+
+      updateState("FAULT");
+      setError(cause instanceof Error ? cause.message : "JARVIS Voice Runtime failed.");
+    }
+  }
+
+  function startListening() {
+    if (activeRef.current) return;
+
+    const recognition = getRecognition();
+    if (!recognition) {
+      setError("This browser does not provide Speech Recognition. Use a supported Chromium browser.");
+      updateState("FAULT");
+      return;
+    }
+
+    setError(null);
+    activeRef.current = true;
+    mutedRef.current = false;
+    processingRef.current = false;
+    setActive(true);
+    setMuted(false);
+    const sessionId = sessionIdRef.current + 1;
+    sessionIdRef.current = sessionId;
+    beginListening(sessionId);
+  }
+
+  function stopListening() {
+    activeRef.current = false;
+    mutedRef.current = false;
+    processingRef.current = false;
+    sessionIdRef.current += 1;
+    setActive(false);
+    setMuted(false);
+    stopRecognition();
+    audioRef.current?.pause();
+    updateState("STANDBY");
+    setTranscript("VOICE RUNTIME STANDBY.");
+  }
+
+  function toggleMute() {
+    if (!activeRef.current) return;
+
+    if (mutedRef.current) {
+      mutedRef.current = false;
+      setMuted(false);
+      setError(null);
+      beginListening(sessionIdRef.current);
+      return;
+    }
+
+    mutedRef.current = true;
+    setMuted(true);
+    stopRecognition();
+
+    if (!processingRef.current) {
+      updateState("STANDBY");
+      setTranscript("MICROPHONE MUTED.");
+    }
+  }
+
+  return () => {
       activeRef.current = false;
       recognitionRef.current?.stop();
       audioRef.current?.pause();
