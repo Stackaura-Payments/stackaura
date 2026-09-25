@@ -31,7 +31,7 @@ type VoiceAgentProps = {
 };
 
 const VOICE_ID = "686905bc7bca40829e6ccf0971948b5f";
-const VOICE_MODEL = "s2.1-pro";
+const VOICE_MODEL = "s2.1-pro-free";
 
 export default function VoiceAgent({ onStateChange }: VoiceAgentProps) {
   const recognitionRef = useRef<SpeechRecognitionLike | null>(null);
