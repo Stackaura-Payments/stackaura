@@ -19,7 +19,7 @@ export default function DashboardShell({
   const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
-    <SoftProductBackground>
+    <div className="dashboard-console"><SoftProductBackground>
       <Sidebar
         collapsed={collapsed}
         mobileOpen={mobileOpen}
@@ -40,6 +40,6 @@ export default function DashboardShell({
         />
         <div className="relative z-10 pb-10">{children}</div>
       </div>
-    </SoftProductBackground>
+    </SoftProductBackground></div>
   );
 }
