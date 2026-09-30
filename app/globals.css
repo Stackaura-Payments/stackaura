@@ -259,6 +259,15 @@ body {
   --tw-gradient-to: rgba(2, 8, 23, 0.88) var(--tw-gradient-to-position);
 }
 
+/* Public marketing pages keep the homepage's light palette in either app theme. */
+.dark .site-public-light { background-color: #f9fbf8; color: #0d1b20; }
+.dark .site-public-light .text-\[\#0a2540\] { color: #0a2540; }
+.dark .site-public-light .text-\[\#425466\] { color: #425466; }
+.dark .site-public-light .text-\[\#6b7c93\] { color: #6b7c93; }
+.dark .site-public-light .text-\[\#4f46e5\] { color: #4f46e5; }
+.dark .site-public-light .text-\[\#5146df\] { color: #5146df; }
+.dark .site-public-light .text-\[\#635bff\] { color: #635bff; }
+
 @media (prefers-reduced-motion: reduce) {
   .public-header-shell,
   .public-header-block,

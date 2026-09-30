@@ -4,19 +4,21 @@ import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import {
   BrandLockup,
-  SoftProductBackground,
+  PublicBackground,
+  PublicHeader,
+  PublicFooter,
   cn,
-  lightProductCompactGhostButtonClass,
-  lightProductHeroClass,
-  lightProductInsetPanelClass,
-  lightProductInputClass,
-  lightProductMutedTextClass,
-  lightProductPanelClass,
-  lightProductSectionEyebrowClass,
-  lightProductStatusPillClass,
+  siteProductCompactGhostButtonClass,
+  siteProductHeroClass,
+  siteProductInsetPanelClass,
+  siteProductInputClass,
+  siteProductMutedTextClass,
+  siteProductPanelClass,
+  siteProductSectionEyebrowClass,
+  siteProductStatusPillClass,
   publicPillClass,
-  publicPrimaryButtonClass,
-  publicSecondaryButtonClass,
+  sitePrimaryButtonClass,
+  siteSecondaryButtonClass,
 } from "../components/stackaura-ui";
 
 type CreatePaymentResponse = {
@@ -395,14 +397,15 @@ export default function PaymentLinksPage() {
     : "Unavailable";
 
   return (
-    <SoftProductBackground>
+    <PublicBackground className="site-public-light bg-[#f9fbf8] text-[#0d1b20] dark:bg-[#f9fbf8] dark:text-[#0d1b20]">
+      <PublicHeader />
       <div className="relative z-10 mx-auto max-w-7xl px-4 pt-5 pb-10 sm:px-6 sm:pt-6 lg:px-10">
-        <section className={cn(lightProductHeroClass, "relative overflow-hidden p-6 lg:p-8")}>
-          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_14%_18%,rgba(255,255,255,0.40),transparent_24%),radial-gradient(circle_at_82%_16%,rgba(122,115,255,0.16),transparent_24%),radial-gradient(circle_at_76%_72%,rgba(125,211,252,0.16),transparent_28%),linear-gradient(180deg,rgba(255,255,255,0.16),transparent_22%)]" />
+        <section className={cn(siteProductHeroClass, "relative overflow-hidden p-6 lg:p-8")}>
+          <div className="pointer-events-none absolute inset-x-0 top-0 h-1 bg-[#217a64]" />
 
           <div className="relative grid gap-6 xl:grid-cols-[1.04fr_0.96fr] xl:items-start">
             <div className="min-w-0">
-              <div className={lightProductSectionEyebrowClass}>Payment links</div>
+              <div className={siteProductSectionEyebrowClass}>Payment links</div>
               <div className="mt-4">
                 <BrandLockup />
               </div>
@@ -418,10 +421,10 @@ export default function PaymentLinksPage() {
               </p>
 
               <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
-                <Link href="/dashboard" className={publicPrimaryButtonClass}>
+                <Link href="/dashboard" className={sitePrimaryButtonClass}>
                   Back to dashboard
                 </Link>
-                <Link href="/docs" className={publicSecondaryButtonClass}>
+                <Link href="/docs" className={siteSecondaryButtonClass}>
                   View docs
                 </Link>
               </div>
@@ -440,28 +443,28 @@ export default function PaymentLinksPage() {
               </div>
             </div>
 
-            <div className={cn(lightProductInsetPanelClass, "p-5 sm:p-6")}>
+            <div className={cn(siteProductInsetPanelClass, "p-5 sm:p-6")}>
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div>
                   <div className="text-sm font-semibold tracking-tight text-[#0a2540]">
                     Payment setup
                   </div>
-                  <p className={cn(lightProductMutedTextClass, "mt-2 max-w-xl")}>
+                  <p className={cn(siteProductMutedTextClass, "mt-2 max-w-xl")}>
                     Payment links inherit the merchant setup used to create the payment, so routing
                     and saved gateway configuration stay consistent.
                   </p>
                 </div>
 
-                <span className={lightProductStatusPillClass(resolutionTone)}>
+                <span className={siteProductStatusPillClass(resolutionTone)}>
                   {resolutionLabel}
                 </span>
               </div>
 
-              <div className={cn("mt-5 p-4", lightProductPanelClass)}>
-                <p className={lightProductMutedTextClass}>{resolutionSummary}</p>
+              <div className={cn("mt-5 p-4", siteProductPanelClass)}>
+                <p className={siteProductMutedTextClass}>{resolutionSummary}</p>
 
                 <div className="mt-4 grid gap-3 sm:grid-cols-2">
-                  <div className={cn("p-4", lightProductInsetPanelClass)}>
+                  <div className={cn("p-4", siteProductInsetPanelClass)}>
                     <div className="text-xs uppercase tracking-[0.18em] text-[#6b7c93]">
                       Resolution source
                     </div>
@@ -470,7 +473,7 @@ export default function PaymentLinksPage() {
                     </div>
                   </div>
 
-                  <div className={cn("p-4", lightProductInsetPanelClass)}>
+                  <div className={cn("p-4", siteProductInsetPanelClass)}>
                     <div className="text-xs uppercase tracking-[0.18em] text-[#6b7c93]">
                       Workspace status
                     </div>
@@ -485,11 +488,11 @@ export default function PaymentLinksPage() {
                 </div>
               </div>
 
-              <div className={cn("mt-4 p-4", lightProductPanelClass)}>
+              <div className={cn("mt-4 p-4", siteProductPanelClass)}>
                 <div className="text-xs uppercase tracking-[0.18em] text-[#6b7c93]">
                   Compliance clarity
                 </div>
-                <p className={cn(lightProductMutedTextClass, "mt-3")}>
+                <p className={cn(siteProductMutedTextClass, "mt-3")}>
                   Stackaura provides payment orchestration and infrastructure software. Licensed
                   payment providers process and settle payments after checkout.
                 </p>
@@ -499,19 +502,19 @@ export default function PaymentLinksPage() {
         </section>
 
         <div className="mt-6 grid gap-6 xl:grid-cols-[1.02fr_0.98fr]">
-          <section className={cn(lightProductPanelClass, "overflow-hidden p-6 lg:p-7")}>
+          <section className={cn(siteProductPanelClass, "overflow-hidden p-6 lg:p-7")}>
             <div className="flex flex-wrap items-start justify-between gap-3">
               <div>
-                <div className={lightProductSectionEyebrowClass}>Create payment link</div>
+                <div className={siteProductSectionEyebrowClass}>Create payment link</div>
                 <h2 className="mt-3 text-2xl font-semibold tracking-tight text-[#0a2540]">
                   Build a hosted payment link
                 </h2>
-                <p className={cn(lightProductMutedTextClass, "mt-3 max-w-2xl")}>
+                <p className={cn(siteProductMutedTextClass, "mt-3 max-w-2xl")}>
                   Create a shareable checkout experience tied to the right merchant setup.
                 </p>
               </div>
 
-              <span className={lightProductStatusPillClass(canCreate ? "success" : "muted")}>
+              <span className={siteProductStatusPillClass(canCreate ? "success" : "muted")}>
                 {canCreate ? "Ready to create" : "Setup needed"}
               </span>
             </div>
@@ -522,7 +525,7 @@ export default function PaymentLinksPage() {
                   API key
                 </span>
                 <input
-                  className={cn(lightProductInputClass, "font-mono text-xs")}
+                  className={cn(siteProductInputClass, "font-mono text-xs")}
                   value={apiKey}
                   onChange={(e) => setApiKey(e.target.value)}
                   placeholder="Ignored when a merchant workspace is selected"
@@ -535,7 +538,7 @@ export default function PaymentLinksPage() {
                     Amount
                   </span>
                   <input
-                    className={lightProductInputClass}
+                    className={siteProductInputClass}
                     value={amount}
                     onChange={(e) => setAmount(e.target.value)}
                     placeholder="25.00"
@@ -548,7 +551,7 @@ export default function PaymentLinksPage() {
                     Currency
                   </span>
                   <select
-                    className={lightProductInputClass}
+                    className={siteProductInputClass}
                     value={currency}
                     onChange={(e) => setCurrency(e.target.value)}
                   >
@@ -565,7 +568,7 @@ export default function PaymentLinksPage() {
                     Customer email
                   </span>
                   <input
-                    className={lightProductInputClass}
+                    className={siteProductInputClass}
                     value={customerEmail}
                     onChange={(e) => setCustomerEmail(e.target.value)}
                     placeholder="customer@example.com"
@@ -576,7 +579,7 @@ export default function PaymentLinksPage() {
                   <span className="text-xs font-medium uppercase tracking-[0.18em] text-[#6b7c93]">
                     Routing strategy
                   </span>
-                  <div className={cn(lightProductInputClass, "flex min-h-[64px] items-center")}>
+                  <div className={cn(siteProductInputClass, "flex min-h-[64px] items-center")}>
                     {loadingGateways
                       ? "Checking connected gateways..."
                       : connectedGateways.length > 0
@@ -600,7 +603,7 @@ export default function PaymentLinksPage() {
                   Description
                 </span>
                 <input
-                  className={lightProductInputClass}
+                  className={siteProductInputClass}
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
                   placeholder="Product / invoice description"
@@ -611,7 +614,7 @@ export default function PaymentLinksPage() {
                 type="submit"
                 disabled={!canCreate}
                 className={cn(
-                  publicPrimaryButtonClass,
+                  sitePrimaryButtonClass,
                   "w-full disabled:cursor-not-allowed disabled:opacity-70"
                 )}
               >
@@ -633,34 +636,34 @@ export default function PaymentLinksPage() {
           </section>
 
           <div className="space-y-6">
-            <section className={cn(lightProductPanelClass, "overflow-hidden p-6 lg:p-7")}>
+            <section className={cn(siteProductPanelClass, "overflow-hidden p-6 lg:p-7")}>
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div>
-                  <div className={lightProductSectionEyebrowClass}>Sharing panel</div>
+                  <div className={siteProductSectionEyebrowClass}>Sharing panel</div>
                   <h2 className="mt-3 text-2xl font-semibold tracking-tight text-[#0a2540]">
                     Share one link everywhere
                   </h2>
-                  <p className={cn(lightProductMutedTextClass, "mt-3")}>
+                  <p className={cn(siteProductMutedTextClass, "mt-3")}>
                     Create one checkout link, then distribute it across the channels where the
                     merchant sells.
                   </p>
                 </div>
 
-                <span className={lightProductStatusPillClass(result ? "success" : "muted")}>
+                <span className={siteProductStatusPillClass(result ? "success" : "muted")}>
                   {result ? "Link ready" : "Awaiting payment link"}
                 </span>
               </div>
 
               {!result ? (
-                <div className={cn("mt-6 p-5", lightProductInsetPanelClass)}>
-                  <p className={lightProductMutedTextClass}>
+                <div className={cn("mt-6 p-5", siteProductInsetPanelClass)}>
+                  <p className={siteProductMutedTextClass}>
                     Create a payment link to unlock sharing across WhatsApp, Instagram, and email
                     without leaving Stackaura.
                   </p>
                 </div>
               ) : (
                 <div className="mt-6 space-y-4">
-                  <div className={cn("p-5", lightProductInsetPanelClass)}>
+                  <div className={cn("p-5", siteProductInsetPanelClass)}>
                     <div className="text-xs uppercase tracking-[0.18em] text-[#6b7c93]">
                       Checkout URL
                     </div>
@@ -672,7 +675,7 @@ export default function PaymentLinksPage() {
                       <button
                         type="button"
                         onClick={() => copyValue(result.checkoutUrl, "checkout")}
-                        className={lightProductCompactGhostButtonClass}
+                        className={siteProductCompactGhostButtonClass}
                       >
                         {copied === "checkout" ? "Copied" : "Copy link"}
                       </button>
@@ -681,7 +684,7 @@ export default function PaymentLinksPage() {
                         href={result.checkoutUrl}
                         target="_blank"
                         rel="noreferrer"
-                        className={cn(publicPrimaryButtonClass, "px-5 py-3")}
+                        className={cn(sitePrimaryButtonClass, "px-5 py-3")}
                       >
                         Open checkout
                       </a>
@@ -693,7 +696,7 @@ export default function PaymentLinksPage() {
                       href={whatsappHref}
                       target="_blank"
                       rel="noreferrer"
-                      className={cn(lightProductInsetPanelClass, "p-4 transition hover:border-white/55")}
+                      className={cn(siteProductInsetPanelClass, "p-4 transition hover:border-white/55")}
                     >
                       <div className="font-semibold text-[#0a2540]">WhatsApp</div>
                       <div className="mt-2 text-sm leading-6 text-[#425466]">
@@ -705,7 +708,7 @@ export default function PaymentLinksPage() {
                       type="button"
                       onClick={() => copyValue(shareMessage, "instagram")}
                       className={cn(
-                        lightProductInsetPanelClass,
+                        siteProductInsetPanelClass,
                         "p-4 text-left transition hover:border-white/55"
                       )}
                     >
@@ -720,7 +723,7 @@ export default function PaymentLinksPage() {
 
                     <a
                       href={emailHref}
-                      className={cn(lightProductInsetPanelClass, "p-4 transition hover:border-white/55")}
+                      className={cn(siteProductInsetPanelClass, "p-4 transition hover:border-white/55")}
                     >
                       <div className="font-semibold text-[#0a2540]">Email</div>
                       <div className="mt-2 text-sm leading-6 text-[#425466]">
@@ -729,7 +732,7 @@ export default function PaymentLinksPage() {
                     </a>
                   </div>
 
-                  <div className={cn("p-5", lightProductInsetPanelClass)}>
+                  <div className={cn("p-5", siteProductInsetPanelClass)}>
                     <div className="text-xs uppercase tracking-[0.18em] text-[#6b7c93]">
                       Payment details
                     </div>
@@ -768,6 +771,7 @@ export default function PaymentLinksPage() {
           </div>
         </div>
       </div>
-    </SoftProductBackground>
+      <PublicFooter />
+    </PublicBackground>
   );
 }

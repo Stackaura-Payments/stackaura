@@ -2,7 +2,7 @@ import {
   PublicPageShell,
   cn,
   publicSectionLabelClass,
-  publicSubtleSurfaceClass,
+  siteSubtleSurfaceClass,
   publicSurfaceClass,
 } from "../components/stackaura-ui";
 
@@ -53,7 +53,7 @@ export default function AboutPage() {
               body: "Give engineering teams one place for hosted checkout, webhooks, payment links, and API operations.",
             },
           ].map((item) => (
-            <div key={item.title} className={cn(publicSubtleSurfaceClass, "p-6")}>
+            <div key={item.title} className={cn(siteSubtleSurfaceClass, "p-6")}>
               <div className="text-lg font-semibold tracking-tight text-[#0a2540]">{item.title}</div>
               <p className="mt-3 text-sm leading-6 text-[#425466]">{item.body}</p>
             </div>

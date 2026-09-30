@@ -1,10 +1,10 @@
 import {
   PublicPageShell,
   cn,
-  publicPrimaryButtonClass,
-  publicSecondaryButtonClass,
+  sitePrimaryButtonClass,
+  siteSecondaryButtonClass,
   publicSectionLabelClass,
-  publicSubtleSurfaceClass,
+  siteSubtleSurfaceClass,
   publicSurfaceClass,
 } from "../components/stackaura-ui";
 
@@ -16,10 +16,10 @@ export default function ContactPage() {
       description="For commercial, developer, merchant growth, and compliance enquiries, reach Stackaura directly and we’ll route you to the right team."
       actions={
         <>
-          <a href="mailto:admin@stackaura.co.za" className={publicPrimaryButtonClass}>
+          <a href="mailto:admin@stackaura.co.za" className={sitePrimaryButtonClass}>
             Email Stackaura
           </a>
-          <a href="https://stackaura.co.za" className={publicSecondaryButtonClass}>
+          <a href="https://stackaura.co.za" className={siteSecondaryButtonClass}>
             Visit website
           </a>
         </>
@@ -98,7 +98,7 @@ export default function ContactPage() {
               body: "Route governance, trust, security, and payment-operations conversations to the right team.",
             },
           ].map((item) => (
-            <div key={item.title} className={cn(publicSubtleSurfaceClass, "p-6")}>
+            <div key={item.title} className={cn(siteSubtleSurfaceClass, "p-6")}>
               <div className="text-lg font-semibold tracking-tight text-[#0a2540]">{item.title}</div>
               <p className="mt-3 text-sm leading-6 text-[#425466]">{item.body}</p>
             </div>

@@ -10,8 +10,6 @@ import {
   cn,
   publicFieldLabelClass,
   publicInputClass,
-  publicPrimaryButtonClass,
-  publicTextMutedClass,
 } from "../components/stackaura-ui";
 
 const MIN_PASSWORD_LENGTH = 8;
@@ -330,7 +328,7 @@ export default function LoginClient({
                 "mt-2",
                 fieldErrors.email &&
                   "border-red-500/50 bg-red-500/[0.04] focus:border-red-500/50 focus:ring-red-500/20",
-                "focus:border-white/15 focus:ring-1 focus:ring-white/20"
+                "focus:border-[#c5f273]"
               )}
               autoComplete="email"
               placeholder="merchant@example.com"
@@ -368,7 +366,7 @@ export default function LoginClient({
                   "pr-12",
                   fieldErrors.password &&
                     "border-red-500/50 bg-red-500/[0.04] focus:border-red-500/50 focus:ring-red-500/20",
-                  "focus:border-white/15 focus:ring-1 focus:ring-white/20"
+                  "focus:border-[#c5f273]"
                 )}
                 autoComplete="current-password"
                 placeholder="Enter your password"
@@ -402,10 +400,9 @@ export default function LoginClient({
             type="submit"
             disabled={isBusy}
             className={cn(
-              publicPrimaryButtonClass,
-              "h-11 min-h-11 w-full rounded-xl border-transparent bg-gradient-to-r from-indigo-500 to-purple-600 px-5 py-0 shadow-[0_12px_30px_rgba(79,70,229,0.34),0_0_20px_rgba(99,102,241,0.25)] transition-all duration-200 ease-out hover:translate-y-[0.5px] hover:brightness-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400/40 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0D1220] active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-70 motion-reduce:transform-none motion-reduce:transition-none",
+              "inline-flex h-12 w-full items-center justify-center rounded-[5px] border border-[#c5f273] bg-[#c5f273] px-5 text-sm font-bold text-[#0d1b20] transition-colors hover:bg-[#dcfaa2] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#c5f273] disabled:cursor-not-allowed disabled:opacity-70",
               submitState === "success" &&
-                "border-emerald-500/70 bg-gradient-to-r from-emerald-500 to-emerald-600 shadow-[0_12px_30px_rgba(16,185,129,0.28)] hover:translate-y-0 hover:brightness-100"
+                "border-[#9fc2aa] bg-[#e7f2ec] text-[#0d1b20]"
             )}
           >
             <span className="inline-flex items-center gap-2">
@@ -420,8 +417,8 @@ export default function LoginClient({
           </button>
         </form>
 
-        <div className="mt-6 rounded-xl border border-white/10 bg-white/[0.03] p-4">
-          <p className={publicTextMutedClass}>
+        <div className="mt-6 border-t border-[#37574e] pt-4">
+          <p className="text-sm leading-6 text-[#b9cbc3]">
             Stackaura provides payment orchestration and infrastructure software. Licensed payment
             providers process and settle payments.
           </p>
@@ -431,7 +428,7 @@ export default function LoginClient({
           Don&apos;t have an account?{" "}
           <Link
             href="/signup"
-            className="font-medium text-white/70 transition-opacity duration-150 ease-out hover:text-white hover:opacity-85"
+          className="font-semibold text-[#c5f273] transition hover:text-white"
           >
             Create an account
           </Link>

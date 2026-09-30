@@ -23,22 +23,31 @@ export function CardContent({
 }
 
 export const publicSurfaceClass =
-  "rounded-[32px] border border-slate-200/80 bg-white/96 shadow-[0_20px_44px_rgba(148,163,184,0.12)] transition-[transform,box-shadow,border-color,background-color] duration-200 ease-out motion-reduce:transition-none dark:border-white/10 dark:bg-[#081221] dark:shadow-[0_16px_36px_rgba(0,0,0,0.22)]";
+  "rounded-[6px] border border-[#d9e4dc] bg-white shadow-none transition-colors duration-200 dark:border-[#d9e4dc] dark:bg-white";
+
+export const siteSubtleSurfaceClass =
+  "rounded-[6px] border border-[#d9e4dc] bg-[#f1f6f1] shadow-none transition-colors duration-200 hover:border-[#88b89a] dark:border-[#d9e4dc] dark:bg-[#f1f6f1]";
+
+export const sitePrimaryButtonClass =
+  "inline-flex min-h-12 items-center justify-center gap-2 rounded-[5px] border border-[#0d1b20] bg-[#0d1b20] px-5 py-3 text-sm font-bold text-white transition-colors hover:bg-[#254a45] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#217a64] disabled:cursor-not-allowed disabled:opacity-60";
+
+export const siteSecondaryButtonClass =
+  "inline-flex min-h-12 items-center justify-center gap-2 rounded-[5px] border border-[#0d1b20] bg-transparent px-5 py-3 text-sm font-bold text-[#0d1b20] transition-colors hover:bg-[#e7f2ec] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#217a64]";
 
 export const publicSubtleSurfaceClass =
   "rounded-[26px] border border-slate-200/80 bg-slate-50/92 shadow-[0_12px_28px_rgba(148,163,184,0.09)] transition-[transform,box-shadow,border-color,background-color] duration-200 ease-out motion-safe:hover:-translate-y-0.5 motion-reduce:transition-none dark:border-white/10 dark:bg-[#0d1829] dark:shadow-[0_10px_20px_rgba(0,0,0,0.12)]";
 
 export const publicInsetSurfaceClass =
-  "rounded-[22px] border border-slate-200/75 bg-white/88 shadow-[0_10px_22px_rgba(148,163,184,0.08)] transition-[transform,box-shadow,border-color,background-color] duration-200 ease-out motion-safe:hover:-translate-y-0.5 motion-reduce:transition-none dark:border-white/10 dark:bg-[#101b2d] dark:shadow-none";
+  "rounded-[5px] border border-[#d9e4dc] bg-[#f9fbf8] shadow-none dark:border-[#d9e4dc] dark:bg-[#f9fbf8]";
 
 export const publicFormSurfaceClass =
-  "relative isolate overflow-hidden rounded-2xl border border-white/10 bg-[#0D1220] shadow-[0_10px_40px_rgba(0,0,0,0.4)] before:pointer-events-none before:absolute before:inset-0 before:rounded-2xl before:border before:border-white/5 before:content-[''] after:pointer-events-none after:absolute after:inset-x-0 after:top-0 after:h-24 after:rounded-t-2xl after:bg-gradient-to-b after:from-white/[0.03] after:to-transparent after:content-['']";
+  "relative isolate overflow-hidden rounded-[6px] border border-[#37574e] bg-[#13282b] shadow-none";
 
 export const publicInputClass =
-  "min-h-[48px] w-full rounded-xl border border-white/[0.08] bg-white/[0.04] px-4 py-3 text-sm text-white shadow-[inset_0_1px_2px_rgba(0,0,0,0.4)] outline-none transition-[border-color,box-shadow,background-color] duration-150 ease-out placeholder:text-white/50 focus:border-indigo-500/60 focus:ring-1 focus:ring-indigo-500/30 disabled:cursor-not-allowed disabled:opacity-70 motion-reduce:transition-none";
+  "min-h-12 w-full rounded-[5px] border border-[#527269] bg-[#0d1b20] px-4 py-3 text-sm text-white outline-none transition-colors placeholder:text-[#9fb5ad] focus:border-[#c5f273] focus:ring-2 focus:ring-[#c5f273]/25 disabled:cursor-not-allowed disabled:opacity-70";
 
 export const publicFieldLabelClass =
-  "text-[11px] font-semibold uppercase tracking-[0.08em] text-white/50";
+  "text-xs font-bold uppercase tracking-[0.1em] text-[#c5f273]";
 
 export const publicPrimaryButtonClass =
   "inline-flex min-h-[48px] items-center justify-center rounded-2xl border border-[#4f46e5] bg-[#4f46e5] px-6 py-3.5 text-sm font-semibold text-white shadow-[0_12px_26px_rgba(79,70,229,0.22)] transition-all duration-200 ease-out hover:bg-[#4338ca] hover:brightness-[1.03] active:scale-[0.99] motion-reduce:transition-none dark:border-[#4f46e5] dark:bg-[#4f46e5] dark:shadow-[0_16px_28px_rgba(0,0,0,0.22)] dark:hover:bg-[#5b54ee]";
@@ -47,10 +56,10 @@ export const publicSecondaryButtonClass =
   "inline-flex min-h-[48px] items-center justify-center rounded-2xl border border-slate-300 bg-white px-6 py-3.5 text-sm font-semibold text-[#0a2540] shadow-[0_10px_20px_rgba(148,163,184,0.08)] transition-all duration-200 ease-out hover:border-slate-400 hover:bg-slate-50 hover:brightness-[0.99] active:scale-[0.99] motion-reduce:transition-none dark:border-white/14 dark:bg-[#0d1829] dark:text-[#e2ebf8] dark:shadow-none dark:hover:border-white/22 dark:hover:bg-[#122033]";
 
 export const publicPillClass =
-  "inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-[#0a2540] shadow-[0_10px_22px_rgba(148,163,184,0.08)] dark:border-white/10 dark:bg-[#0d1829] dark:text-white dark:shadow-none";
+  "inline-flex items-center gap-2 border-l-2 border-[#217a64] pl-3 text-xs font-bold uppercase tracking-[0.1em] text-[#217a64]";
 
 export const publicSectionLabelClass =
-  "text-sm font-semibold uppercase tracking-[0.18em] text-[#6b7c93] dark:text-[#8dd8ff]";
+  "text-xs font-bold uppercase tracking-[0.12em] text-[#217a64]";
 
 export const publicTextPrimaryClass =
   "text-[#0a2540] dark:text-[#f8fafc]";
@@ -65,7 +74,7 @@ export const publicBorderSubtleClass =
   "border-slate-200 dark:border-white/16";
 
 export const publicBadgeClass =
-  "inline-flex items-center rounded-full border border-slate-200 bg-white px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.22em] text-[#6b7c93] shadow-[0_8px_18px_rgba(148,163,184,0.08)] dark:border-white/12 dark:bg-[#0d1829] dark:text-[#d7e2f2] dark:shadow-none";
+  "inline-flex items-center rounded-[4px] border border-[#9fc2aa] bg-[#e7f2ec] px-3 py-1.5 text-[11px] font-bold uppercase tracking-[0.1em] text-[#217a64]";
 
 export const publicMinimalSecondaryButtonClass =
   "inline-flex min-h-[52px] items-center justify-center rounded-2xl border border-slate-300 bg-white px-6 py-3.5 text-sm font-semibold text-[#0a2540] transition-all duration-200 ease-out hover:border-slate-400 hover:bg-slate-50 hover:brightness-[0.99] active:scale-[0.99] motion-reduce:transition-none dark:border-white/14 dark:bg-[#0d1829] dark:text-[#f8fafc] dark:hover:border-white/24 dark:hover:bg-[#122033]";
@@ -77,13 +86,35 @@ export const publicHeaderMobileButtonClass =
   "inline-flex min-h-[46px] w-full items-center justify-center rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-semibold text-[#0a2540] transition-all duration-200 ease-out hover:border-slate-400 hover:bg-slate-50 hover:brightness-[0.99] active:scale-[0.99] motion-reduce:transition-none dark:border-white/14 dark:bg-[#0d1829] dark:text-[#f8fafc] dark:hover:border-white/24 dark:hover:bg-[#122033]";
 
 export const publicCodePanelClass =
-  "rounded-[32px] border border-[#12243c] bg-[#071323] p-6 text-white shadow-[0_20px_42px_rgba(2,8,23,0.22)] dark:border-white/10 dark:bg-[#050d19] dark:shadow-[0_18px_34px_rgba(0,0,0,0.24)]";
+  "rounded-[6px] border border-[#37574e] bg-[#0d1b20] p-6 text-white shadow-none";
 
 export const brandGlassContainerClass =
-  "border border-slate-200 bg-white shadow-[0_8px_18px_rgba(148,163,184,0.10)] dark:border-white/10 dark:bg-[#0d1829] dark:shadow-none";
+  "border border-[#c8d7cc] bg-[#e7f2ec] shadow-none";
 
 export const lightProductHeroClass =
   "relative isolate rounded-[32px] border border-slate-200/80 bg-white/96 shadow-[0_18px_40px_rgba(15,23,42,0.08)] transition-[box-shadow,border-color,background-color] duration-200 ease-out motion-reduce:transition-none dark:border-white/10 dark:bg-[#0d1220] dark:shadow-[0_18px_40px_rgba(0,0,0,0.32)]";
+
+export const siteProductHeroClass =
+  "relative isolate rounded-[6px] border border-[#d9e4dc] bg-white shadow-none";
+
+export const siteProductPanelClass =
+  "relative isolate rounded-[6px] border border-[#d9e4dc] bg-white shadow-none";
+
+export const siteProductInsetPanelClass =
+  "relative isolate rounded-[5px] border border-[#d9e4dc] bg-[#f1f6f1] shadow-none";
+
+export const siteProductInputClass =
+  "min-h-12 w-full rounded-[5px] border border-[#afc5b5] bg-white px-4 py-3 text-sm text-[#0d1b20] outline-none placeholder:text-[#678076] focus:border-[#217a64] focus:ring-2 focus:ring-[#217a64]/20 disabled:cursor-not-allowed disabled:opacity-70";
+
+export const siteProductMutedTextClass = "text-sm leading-6 text-[#506e60]";
+export const siteProductSectionEyebrowClass = "text-xs font-bold uppercase tracking-[0.12em] text-[#217a64]";
+export const siteProductCompactGhostButtonClass = "inline-flex min-h-10 items-center justify-center rounded-[5px] border border-[#9fc2aa] bg-white px-4 py-2 text-sm font-semibold text-[#0d1b20] transition hover:bg-[#e7f2ec]";
+
+export function siteProductStatusPillClass(tone: "success" | "violet" | "muted" | "warning") {
+  if (tone === "success") return "inline-flex items-center rounded-[4px] border border-[#9fc2aa] bg-[#e7f2ec] px-3 py-1 text-xs font-semibold text-[#217a64]";
+  if (tone === "warning") return "inline-flex items-center rounded-[4px] border border-amber-300 bg-amber-50 px-3 py-1 text-xs font-semibold text-amber-800";
+  return "inline-flex items-center rounded-[4px] border border-[#d9e4dc] bg-[#f9fbf8] px-3 py-1 text-xs font-semibold text-[#506e60]";
+}
 
 export const lightProductPanelClass =
   "relative isolate rounded-[28px] border border-slate-200/75 bg-white/94 shadow-[0_14px_30px_rgba(15,23,42,0.06)] transition-[transform,box-shadow,border-color,background-color] duration-200 ease-out motion-safe:hover:-translate-y-0.5 motion-reduce:transition-none dark:border-white/10 dark:bg-[#0f1727] dark:shadow-[0_14px_32px_rgba(0,0,0,0.24)]";
@@ -137,13 +168,16 @@ export const darkSurfaceClass =
   "rounded-[28px] border border-white/10 bg-[#08152f]/60 shadow-[0_20px_80px_rgba(0,0,0,0.28)] backdrop-blur-2xl";
 
 export const darkPanelClass =
-  "rounded-3xl border border-white/10 bg-[#08152f]/55 shadow-[0_12px_40px_rgba(0,0,0,0.22)] backdrop-blur-xl transition-[transform,box-shadow,border-color,background-color] duration-200 ease-out motion-safe:hover:-translate-y-0.5 motion-reduce:transition-none";
+  "rounded-[6px] border border-[#37574e] bg-[#13282b] shadow-none";
 
 export const darkSubtleSurfaceClass =
   "rounded-2xl border border-white/10 bg-black/20 backdrop-blur-xl transition-[transform,box-shadow,border-color,background-color] duration-200 ease-out motion-safe:hover:-translate-y-0.5 motion-reduce:transition-none";
 
 export const darkHeroSurfaceClass =
-  "rounded-[32px] border border-white/12 bg-[linear-gradient(180deg,rgba(12,27,57,0.92)_0%,rgba(6,15,36,0.78)_100%)] shadow-[0_26px_96px_rgba(0,0,0,0.34),inset_0_1px_0_rgba(255,255,255,0.06)] backdrop-blur-2xl";
+  "rounded-[6px] border border-[#37574e] bg-[#0d1b20] shadow-none";
+
+export const siteDarkInsetSurfaceClass =
+  "rounded-[5px] border border-[#37574e] bg-[#193232] shadow-none";
 
 export const darkRichPanelClass =
   "rounded-[28px] border border-white/10 bg-[linear-gradient(180deg,rgba(11,24,52,0.90)_0%,rgba(6,14,34,0.76)_100%)] shadow-[0_18px_56px_rgba(0,0,0,0.30),inset_0_1px_0_rgba(255,255,255,0.04)] backdrop-blur-2xl";
@@ -155,10 +189,10 @@ export const darkGhostButtonClass =
   "inline-flex min-h-[44px] items-center justify-center rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white shadow-[0_8px_24px_rgba(0,0,0,0.18)] backdrop-blur-xl transition-all duration-200 ease-out hover:border-[#20BCED]/35 hover:bg-white/10 hover:brightness-105 active:scale-[0.99] motion-reduce:transition-none";
 
 export const darkPrimaryButtonClass =
-  "inline-flex min-h-[44px] items-center justify-center rounded-2xl bg-[#A0E9FF] px-4 py-3 text-sm font-semibold text-[#02142b] transition-all duration-200 ease-out hover:brightness-105 active:scale-[0.99] motion-reduce:transition-none";
+  "inline-flex min-h-12 items-center justify-center rounded-[5px] bg-[#c5f273] px-5 py-3 text-sm font-bold text-[#0d1b20] transition-colors hover:bg-[#dcfaa2]";
 
 export const darkSecondaryButtonClass =
-  "inline-flex min-h-[44px] items-center justify-center rounded-2xl border border-white/12 bg-[linear-gradient(180deg,rgba(114,98,255,0.18)_0%,rgba(61,83,207,0.18)_100%)] px-4 py-3 text-sm font-semibold text-[#d7dcff] shadow-[0_10px_30px_rgba(44,56,133,0.22)] backdrop-blur-xl transition-all duration-200 ease-out hover:border-[#8da0ff]/30 hover:bg-[linear-gradient(180deg,rgba(114,98,255,0.24)_0%,rgba(61,83,207,0.22)_100%)] hover:brightness-105 active:scale-[0.99] motion-reduce:transition-none";
+  "inline-flex min-h-12 items-center justify-center rounded-[5px] border border-[#b9cbc3] bg-transparent px-5 py-3 text-sm font-bold text-white transition-colors hover:bg-[#254a45]";
 
 export const darkCompactGhostButtonClass =
   "inline-flex items-center justify-center rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-sm text-white shadow-[0_8px_24px_rgba(0,0,0,0.18)] backdrop-blur-xl transition-all duration-200 ease-out hover:border-[#20BCED]/35 hover:bg-white/10 hover:brightness-105 active:scale-[0.99] motion-reduce:transition-none";
@@ -173,7 +207,7 @@ export const darkPillClass =
   "inline-flex items-center rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-zinc-200";
 
 export const darkSectionEyebrowClass =
-  "text-xs uppercase tracking-[0.24em] text-[#8dd8ff]";
+  "text-xs font-bold uppercase tracking-[0.12em] text-[#c5f273]";
 
 export const darkMutedTextClass = "text-sm leading-6 text-[#d4deea]";
 
@@ -213,15 +247,17 @@ const navItems = [
 export function BrandLockup({
   compact = false,
   showTagline = true,
+  inverse = false,
 }: {
   compact?: boolean;
   showTagline?: boolean;
+  inverse?: boolean;
 }) {
   return (
     <Link href="/" className="flex min-w-0 items-center gap-3">
       <div
         className={cn(
-          "flex items-center justify-center rounded-2xl",
+          "flex items-center justify-center rounded-[5px]",
           brandGlassContainerClass,
           compact ? "h-10 w-10" : "h-11 w-11"
         )}
@@ -239,14 +275,14 @@ export function BrandLockup({
       <div className="min-w-0">
         <div
           className={cn(
-            "truncate font-semibold tracking-tight text-[#0a2540] dark:text-white",
+            inverse ? "truncate font-semibold text-white" : "truncate font-semibold text-[#0d1b20]",
             compact ? "text-lg" : "text-xl"
           )}
         >
           Stackaura
         </div>
         {showTagline ? (
-          <div className="text-xs font-medium uppercase tracking-[0.2em] text-[#635bff] dark:text-[#8dd8ff]">
+          <div className={cn("text-xs font-bold uppercase tracking-[0.1em]", inverse ? "text-[#c5f273]" : "text-[#217a64]")}>
             Financial infrastructure
           </div>
         ) : null}
@@ -294,53 +330,51 @@ export function SoftProductBackground({
 
 export function PublicHeader() {
   return (
-    <header className="public-header-shell relative z-20 border-b border-slate-200 bg-white/96 px-4 sm:px-6 lg:px-10 dark:border-white/14 dark:bg-[#030712]">
+    <header className="public-header-shell relative z-20 border-b border-[#d9e4dc] bg-[#f9fbf8] px-4 sm:px-6 lg:px-10">
       <div className="mx-auto flex max-w-[1440px] items-center justify-between gap-4 py-4 lg:relative lg:gap-6">
         <div className="public-header-block min-w-0 flex items-center gap-10">
-          <div className="min-w-0 lg:hidden">
+          <div className="min-w-0 xl:hidden">
             <BrandLockup compact showTagline={false} />
           </div>
-          <div className="hidden lg:block">
+          <div className="hidden xl:block">
             <BrandLockup />
           </div>
 
           <PublicHeaderNav
             items={navItems}
-            className="public-header-block public-header-block-delay-1 lg:absolute lg:left-1/2 lg:top-1/2 lg:-translate-x-1/2 lg:-translate-y-1/2"
+            className="public-header-block public-header-block-delay-1 xl:absolute xl:left-1/2 xl:top-1/2 xl:-translate-x-1/2 xl:-translate-y-1/2"
           />
         </div>
 
-        <div className="public-header-block public-header-block-delay-2 hidden items-center gap-3 lg:flex">
-          <Link href="/login" className={publicHeaderSecondaryButtonClass}>
+        <div className="public-header-block public-header-block-delay-2 hidden items-center gap-3 xl:flex">
+          <Link href="/login" className={siteSecondaryButtonClass}>
             Sign in
           </Link>
           <Link
             href="/signup"
-            className={cn(
-              "inline-flex min-h-[44px] items-center justify-center rounded-xl bg-[#4f46e5] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#4338ca]",
-            )}
+            className={sitePrimaryButtonClass}
           >
             Start integrating
           </Link>
         </div>
 
-        <details className="public-header-block public-header-block-delay-1 relative lg:hidden">
-          <summary className="group flex min-h-[44px] list-none items-center justify-center gap-2 rounded-xl border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-[#425466] transition hover:border-slate-400 hover:bg-slate-50 dark:border-white/22 dark:bg-[#0f172a] dark:text-[#f8fafc] dark:hover:border-white/34 dark:hover:bg-[#111827] [&::-webkit-details-marker]:hidden">
+        <details className="public-header-block public-header-block-delay-1 relative xl:hidden">
+          <summary className="group flex min-h-[44px] list-none items-center justify-center gap-2 rounded-[5px] border border-[#9fc2aa] bg-transparent px-4 py-2 text-sm font-semibold text-[#0d1b20] transition hover:bg-[#e7f2ec] [&::-webkit-details-marker]:hidden">
             <span>Menu</span>
             <span className="flex flex-col gap-1">
-              <span className="block h-[2px] w-4 rounded-full bg-[#4f46e5] dark:bg-[#8dd8ff]" />
-              <span className="block h-[2px] w-4 rounded-full bg-[#4f46e5] dark:bg-[#8dd8ff]" />
-              <span className="block h-[2px] w-4 rounded-full bg-[#4f46e5] dark:bg-[#8dd8ff]" />
+              <span className="block h-[2px] w-4 bg-[#217a64]" />
+              <span className="block h-[2px] w-4 bg-[#217a64]" />
+              <span className="block h-[2px] w-4 bg-[#217a64]" />
             </span>
           </summary>
 
-          <div className="absolute right-0 top-[calc(100%+12px)] z-30 w-[min(320px,calc(100vw-2rem))] rounded-[24px] border border-slate-200 bg-white p-4 shadow-[0_18px_38px_rgba(148,163,184,0.14)] dark:border-white/14 dark:bg-[#0f172a] dark:shadow-[0_22px_42px_rgba(0,0,0,0.30)]">
+          <div className="absolute right-0 top-[calc(100%+12px)] z-30 w-[min(320px,calc(100vw-2rem))] rounded-[6px] border border-[#d9e4dc] bg-[#f9fbf8] p-4 shadow-[0_18px_38px_rgba(13,27,32,0.12)]">
             <nav className="grid gap-2">
               {navItems.map((item) => (
                 <Link
                   key={item.href}
                   href={item.href}
-                  className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-medium text-[#425466] transition hover:bg-slate-100 hover:text-[#0a2540] dark:border-white/14 dark:bg-[#111b2d] dark:text-[#dbe6f6] dark:hover:bg-[#18253a] dark:hover:text-white"
+                  className="rounded-[5px] border border-[#d9e4dc] bg-white px-4 py-3 text-sm font-medium text-[#0d1b20] transition hover:bg-[#e7f2ec]"
                 >
                   {item.label}
                 </Link>
@@ -348,14 +382,12 @@ export function PublicHeader() {
             </nav>
 
             <div className="mt-3 grid gap-2">
-              <Link href="/login" className={publicHeaderMobileButtonClass}>
+              <Link href="/login" className={siteSecondaryButtonClass}>
                 Sign in
               </Link>
               <Link
                 href="/signup"
-                className={cn(
-                  "inline-flex min-h-[46px] w-full items-center justify-center rounded-xl bg-[#4f46e5] px-4 py-3 text-sm font-semibold text-white transition hover:bg-[#4338ca]",
-                )}
+                className={sitePrimaryButtonClass}
               >
                 Start integrating
               </Link>
@@ -387,29 +419,29 @@ export function PublicPageShell({
   children?: ReactNode;
 }) {
   return (
-    <PublicBackground>
+    <PublicBackground className="site-public-light bg-[#f9fbf8] text-[#0d1b20] dark:bg-[#f9fbf8] dark:text-[#0d1b20]">
       <PublicHeader />
 
-      <div className="relative mx-auto max-w-[1440px] px-6 py-14 lg:px-10 lg:py-16">
+      <div className="relative mx-auto max-w-[1240px] px-4 py-14 sm:px-6 lg:px-8 lg:py-20">
         <section
           className={cn(
             "gap-8 lg:gap-12",
-            aside ? "grid lg:grid-cols-[1.05fr_0.95fr] lg:items-start" : "max-w-4xl"
+            aside ? "grid min-w-0 grid-cols-[minmax(0,1fr)] lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] lg:items-start" : "max-w-4xl"
           )}
         >
-          <div className={cn("max-w-3xl", !aside && "max-w-4xl")}>
+          <div className={cn("min-w-0 max-w-3xl", !aside && "max-w-4xl")}>
             <div className={publicPillClass}>{eyebrow}</div>
-            <h1 className="mt-8 max-w-4xl text-5xl font-semibold leading-[1.02] tracking-[-0.04em] text-[#0a2540] sm:text-6xl dark:text-white">
+            <h1 className="mt-6 max-w-4xl text-4xl font-semibold leading-[1.1] text-[#0d1b20] sm:text-5xl lg:text-[58px]">
               {title}
             </h1>
-            <p className="mt-6 max-w-3xl text-lg leading-8 text-[#425466] sm:text-[21px] dark:text-zinc-300">
+            <p className="mt-5 max-w-3xl text-base leading-7 text-[#506e60] sm:text-lg sm:leading-8">
               {description}
             </p>
 
             {actions ? <div className="mt-8 flex flex-col gap-3 sm:flex-row">{actions}</div> : null}
           </div>
 
-          {aside ? <div className="lg:pt-2">{aside}</div> : null}
+          {aside ? <div className="min-w-0 lg:pt-2">{aside}</div> : null}
         </section>
 
         {children ? <div className="mt-10 space-y-6">{children}</div> : null}

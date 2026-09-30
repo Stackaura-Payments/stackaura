@@ -3,10 +3,10 @@ import {
   PublicPageShell,
   cn,
   publicCodePanelClass,
-  publicPrimaryButtonClass,
+  sitePrimaryButtonClass,
   publicSectionLabelClass,
-  publicSecondaryButtonClass,
-  publicSubtleSurfaceClass,
+  siteSecondaryButtonClass,
+  siteSubtleSurfaceClass,
   publicSurfaceClass,
 } from "../components/stackaura-ui";
 import {
@@ -29,20 +29,20 @@ export default function DocsPage() {
               href={`${baseUrl}/docs`}
               target="_blank"
               rel="noreferrer"
-              className={publicPrimaryButtonClass}
+              className={sitePrimaryButtonClass}
             >
               View API reference
             </a>
           ) : (
             <ContactSalesLink
-              className={publicPrimaryButtonClass}
+              className={sitePrimaryButtonClass}
               trackingParams={{ surface: "docs_hero", cta_label: "request_api_access" }}
             >
               Request API access
             </ContactSalesLink>
           )}
           <ContactSalesLink
-            className={publicSecondaryButtonClass}
+            className={siteSecondaryButtonClass}
             trackingParams={{ surface: "docs_hero", cta_label: "contact_sales" }}
           >
             Contact sales
@@ -51,10 +51,10 @@ export default function DocsPage() {
       }
       aside={
         <div className={publicCodePanelClass}>
-          <div className="text-xs font-semibold uppercase tracking-[0.2em] text-[#7dd3fc]">
+          <div className="text-xs font-bold uppercase tracking-[0.12em] text-[#c5f273]">
             Quick start
           </div>
-          <pre className="mt-4 overflow-x-auto text-sm leading-7 text-[#d6e3f0]">
+          <pre className="mt-4 overflow-x-auto text-sm leading-7 text-[#dce9e2]">
 {`curl -X POST https://api.stackaura.co.za/v1/payments \\
   -H "Authorization: Bearer sk_live_..." \\
   -H "Content-Type: application/json" \\
@@ -110,7 +110,7 @@ GET  /v1/payments/subscriptions`}
 
         <div className="mt-8 grid gap-4 xl:grid-cols-3">
           {gatewayCapabilityMatrix.map((gateway) => (
-            <div key={gateway.gateway} className={cn(publicSubtleSurfaceClass, "p-6")}>
+            <div key={gateway.gateway} className={cn(siteSubtleSurfaceClass, "p-6")}>
               <div className="flex items-center justify-between gap-3">
                 <div className="text-2xl font-semibold tracking-tight text-[#0a2540]">
                   {gateway.gateway}
@@ -143,7 +143,7 @@ GET  /v1/payments/subscriptions`}
 
         <div className="mt-6 grid gap-4 md:grid-cols-3">
           {gatewayCapabilityDisclosures.map((item) => (
-            <div key={item} className={cn(publicSubtleSurfaceClass, "p-5 text-sm leading-7 text-[#425466]")}>
+            <div key={item} className={cn(siteSubtleSurfaceClass, "p-5 text-sm leading-7 text-[#425466]")}>
               {item}
             </div>
           ))}
@@ -160,7 +160,7 @@ GET  /v1/payments/subscriptions`}
             "Merchant operations and dashboard tooling",
             "Recurring billing foundations",
           ].map((item) => (
-            <div key={item} className={cn(publicSubtleSurfaceClass, "p-5 text-sm leading-6 text-[#425466]")}>
+            <div key={item} className={cn(siteSubtleSurfaceClass, "p-5 text-sm leading-6 text-[#425466]")}>
               {item}
             </div>
           ))}

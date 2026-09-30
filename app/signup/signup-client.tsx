@@ -11,10 +11,6 @@ import {
   publicBadgeClass,
   publicFieldLabelClass,
   publicInputClass,
-  publicInsetSurfaceClass,
-  publicPrimaryButtonClass,
-  publicSecondaryButtonClass,
-  publicTextMutedClass,
 } from "../components/stackaura-ui";
 import { initiateOzowSignupPayment } from "../lib/ozow";
 
@@ -450,7 +446,7 @@ export default function SignupClient({
                 "mt-2",
                 fieldErrors.businessName &&
                   "border-red-500/50 bg-red-500/[0.04] focus:border-red-500/50 focus:ring-red-500/20",
-                "focus:border-white/15 focus:ring-1 focus:ring-white/20"
+                "focus:border-[#c5f273]"
               )}
               disabled={isBusy}
               aria-invalid={Boolean(fieldErrors.businessName)}
@@ -486,7 +482,7 @@ export default function SignupClient({
                 "mt-2",
                 fieldErrors.email &&
                   "border-red-500/50 bg-red-500/[0.04] focus:border-red-500/50 focus:ring-red-500/20",
-                "focus:border-white/15 focus:ring-1 focus:ring-white/20"
+                "focus:border-[#c5f273]"
               )}
               autoComplete="email"
               disabled={isBusy}
@@ -525,7 +521,7 @@ export default function SignupClient({
                   "pr-12",
                   fieldErrors.password &&
                     "border-red-500/50 bg-red-500/[0.04] focus:border-red-500/50 focus:ring-red-500/20",
-                  "focus:border-white/15 focus:ring-1 focus:ring-white/20"
+                  "focus:border-[#c5f273]"
                 )}
                 autoComplete="new-password"
                 disabled={isBusy}
@@ -567,21 +563,18 @@ export default function SignupClient({
                     onClick={() => setSelectedPlan(plan.code)}
                     disabled={isBusy}
                     className={cn(
-                      "h-full rounded-[24px] border p-4 text-left transition duration-200 ease-out disabled:cursor-not-allowed disabled:opacity-70 motion-reduce:transition-none",
+                      "h-full rounded-[5px] border p-4 text-left transition duration-200 ease-out disabled:cursor-not-allowed disabled:opacity-70",
                       selected
-                        ? "border-[#7a73ff]/40 bg-[#f5f3ff] shadow-[0_16px_28px_rgba(99,91,255,0.10)] dark:border-[#7a73ff]/28 dark:bg-[#121830] dark:shadow-none"
-                        : cn(
-                            publicInsetSurfaceClass,
-                            "hover:border-slate-300 dark:hover:border-white/16"
-                          ),
+                        ? "border-[#c5f273] bg-[#e7f2ec]"
+                        : "border-[#527269] bg-[#f9fbf8] hover:border-[#c5f273]",
                       plan.featured &&
                         !selected &&
-                        "border-[#d7d2ff] bg-[#faf8ff] dark:border-[#7a73ff]/20 dark:bg-[#10172b]"
+                        "border-[#9fc2aa] bg-[#e7f2ec]"
                     )}
                   >
                     <div className="flex flex-col gap-3">
                       <div className="min-w-0">
-                        <div className="text-sm font-semibold text-[#0a2540]">{plan.name}</div>
+                        <div className="text-sm font-semibold text-[#0d1b20]">{plan.name}</div>
                       </div>
 
                       {plan.featured ? (
@@ -589,8 +582,8 @@ export default function SignupClient({
                           className={cn(
                             publicBadgeClass,
                             selected
-                              ? "max-w-max self-start border-emerald-300 bg-emerald-50 text-emerald-700 dark:border-emerald-400/18 dark:bg-emerald-400/10 dark:text-emerald-200"
-                              : "max-w-max self-start border-[#d7d2ff] bg-[#f4f2ff] text-[#5146df] dark:border-[#7a73ff]/24 dark:bg-[#151a34] dark:text-[#d8d5ff]",
+                              ? "max-w-max self-start border-[#217a64] bg-white text-[#217a64]"
+                              : "max-w-max self-start border-[#9fc2aa] bg-white text-[#217a64]",
                             "max-w-max self-start"
                           )}
                         >
@@ -599,32 +592,31 @@ export default function SignupClient({
                       ) : null}
 
                       <div>
-                        <div className="text-lg font-semibold tracking-tight text-[#0a2540]">
+                        <div className="text-lg font-semibold text-[#0d1b20]">
                           {plan.price}
                         </div>
-                        <div className="text-[11px] tracking-[0.12em] text-[#6b7c93]">
+                        <div className="text-[11px] tracking-[0.12em] text-[#506e60]">
                           {plan.suffix}
                         </div>
                       </div>
                     </div>
 
-                    <p className="mt-3 text-sm leading-6 text-[#425466]">{plan.description}</p>
+                    <p className="mt-3 text-sm leading-6 text-[#506e60]">{plan.description}</p>
                   </button>
                 );
               })}
             </div>
 
-            <p className={cn("mt-3 text-sm leading-6", publicTextMutedClass)}>{planNote}</p>
+            <p className="mt-3 text-sm leading-6 text-[#b9cbc3]">{planNote}</p>
           </div>
 
           <button
             type="submit"
             disabled={isBusy}
             className={cn(
-              publicPrimaryButtonClass,
-              "h-11 min-h-11 w-full rounded-xl border-transparent bg-gradient-to-r from-indigo-500 to-purple-600 px-5 py-0 shadow-[0_12px_30px_rgba(79,70,229,0.34),0_0_20px_rgba(99,102,241,0.25)] transition-all duration-200 ease-out hover:translate-y-[0.5px] hover:brightness-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400/40 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0D1220] active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-70 motion-reduce:transform-none motion-reduce:transition-none",
+              "inline-flex h-12 w-full items-center justify-center rounded-[5px] border border-[#c5f273] bg-[#c5f273] px-5 text-sm font-bold text-[#0d1b20] transition-colors hover:bg-[#dcfaa2] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#c5f273] disabled:cursor-not-allowed disabled:opacity-70",
               submitState === "success" &&
-                "border-emerald-500/70 bg-gradient-to-r from-emerald-500 to-emerald-600 shadow-[0_12px_30px_rgba(16,185,129,0.28)] hover:translate-y-0 hover:brightness-100"
+                "border-[#9fc2aa] bg-[#e7f2ec] text-[#0d1b20]"
             )}
           >
             <span className="inline-flex items-center gap-2">
@@ -639,8 +631,8 @@ export default function SignupClient({
           </button>
         </form>
 
-        <div className="mt-6 rounded-xl border border-white/10 bg-white/[0.03] p-4">
-          <p className={publicTextMutedClass}>
+        <div className="mt-6 border-t border-[#37574e] pt-4">
+          <p className="text-sm leading-6 text-[#b9cbc3]">
             Stackaura provides software infrastructure and orchestration tools. Licensed payment
             providers process and settle payments.
           </p>
@@ -650,8 +642,7 @@ export default function SignupClient({
             onClick={handleOzowSignup}
             disabled={isBusy}
             className={cn(
-              publicSecondaryButtonClass,
-              "mt-4 min-h-11 w-full rounded-xl border-white/10 bg-white/[0.04] px-5 py-0 text-white shadow-none transition-all duration-200 ease-out hover:translate-y-[0.5px] hover:bg-white/[0.08] hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/20 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0D1220] active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-70 motion-reduce:transform-none motion-reduce:transition-none sm:w-auto"
+              "mt-4 inline-flex min-h-11 w-full items-center justify-center rounded-[5px] border border-[#9fc2aa] bg-transparent px-5 py-2 text-sm font-semibold text-white transition-colors hover:bg-[#254a45] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#c5f273] disabled:cursor-not-allowed disabled:opacity-70 sm:w-auto"
             )}
           >
             <span className="inline-flex items-center gap-2">
@@ -667,7 +658,7 @@ export default function SignupClient({
           Already have an account?{" "}
           <Link
             href="/login"
-            className="font-medium text-white/70 transition-opacity duration-150 ease-out hover:text-white hover:opacity-85"
+            className="font-semibold text-[#c5f273] transition hover:text-white"
           >
             Sign in
           </Link>

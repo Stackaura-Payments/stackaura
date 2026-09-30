@@ -6,7 +6,7 @@ import {
   PublicHeader,
   cn,
   darkHeroSurfaceClass,
-  darkInsetPanelClass,
+  siteDarkInsetSurfaceClass,
   darkMutedTextClass,
   darkPanelClass,
   darkPrimaryButtonClass,
@@ -76,14 +76,14 @@ const directVsStackaura = {
 } as const;
 
 export default function IntegrationsPage() {
-  const sectionClass = "mx-auto max-w-[1440px] px-5 sm:px-6 lg:px-10";
+  const sectionClass = "mx-auto max-w-[1240px] px-4 sm:px-6 lg:px-8";
 
   return (
-    <PublicBackground className="bg-[#06111f] text-white">
+    <PublicBackground className="bg-[#0d1b20] text-white dark:bg-[#0d1b20]">
       <PublicHeader />
 
       <div className="relative pb-20">
-        <section className={cn(sectionClass, "pt-16 sm:pt-20")}>
+        <section className={cn(sectionClass, "pt-8 sm:pt-12")}>
           <div
             className={cn(
               darkHeroSurfaceClass,
@@ -93,19 +93,19 @@ export default function IntegrationsPage() {
             <div className="grid gap-10 lg:grid-cols-[1.02fr_0.98fr] lg:items-center">
               <div className="max-w-3xl">
                 <div className={darkSectionEyebrowClass}>Integrations</div>
-                <h1 className="mt-5 text-[42px] font-semibold leading-[0.96] tracking-[-0.06em] text-white sm:text-6xl lg:text-[72px]">
+                <h1 className="mt-6 text-4xl font-semibold leading-[1.1] text-white sm:text-5xl lg:text-[58px]">
                   One integration. Multiple payment rails.
                 </h1>
-                <p className="mt-5 max-w-2xl text-base leading-7 text-[#d3def0] sm:text-[21px] sm:leading-8">
+                <p className="mt-5 max-w-2xl text-base leading-7 text-[#c9d5d2] sm:text-lg sm:leading-8">
                   Use one unified API for Paystack, Ozow, and Yoco, keep smart routing and fallback
                   in one place, and stop duplicating provider logic across your product.
                 </p>
 
                 <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-                  <Link href="/signup" className={cn(darkPrimaryButtonClass, "rounded-2xl px-6 py-3.5")}>
+                  <Link href="/signup" className={darkPrimaryButtonClass}>
                     Start integrating
                   </Link>
-                  <Link href="/docs" className={cn(darkSecondaryButtonClass, "rounded-2xl px-6 py-3.5 backdrop-blur-none")}>
+                  <Link href="/docs" className={darkSecondaryButtonClass}>
                     View docs
                   </Link>
                 </div>
@@ -117,7 +117,7 @@ export default function IntegrationsPage() {
 
               <div className={cn(darkPanelClass, "backdrop-blur-none p-5 sm:p-6")}>
                 <div className="grid gap-4">
-                  <div className={cn(darkInsetPanelClass, "backdrop-blur-none p-4")}>
+                  <div className={cn(siteDarkInsetSurfaceClass, "backdrop-blur-none p-4")}>
                     <div className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#8dd8ff]">
                       Why Stackaura
                     </div>
@@ -132,7 +132,7 @@ export default function IntegrationsPage() {
 
                   <div className="grid gap-3 sm:grid-cols-3">
                     {supportedRails.map((rail) => (
-                      <div key={rail.name} className={cn(darkInsetPanelClass, "backdrop-blur-none p-4")}>
+                      <div key={rail.name} className={cn(siteDarkInsetSurfaceClass, "backdrop-blur-none p-4")}>
                         <Image
                           src={rail.src}
                           alt={rail.name}
@@ -184,7 +184,7 @@ export default function IntegrationsPage() {
               </h2>
               <div className="mt-6 grid gap-3">
                 {directVsStackaura.without.map((item) => (
-                  <div key={item} className={cn(darkInsetPanelClass, "backdrop-blur-none px-4 py-3 text-sm text-[#d3def0]")}>
+                  <div key={item} className={cn(siteDarkInsetSurfaceClass, "backdrop-blur-none px-4 py-3 text-sm text-[#d3def0]")}>
                     {item}
                   </div>
                 ))}
@@ -198,7 +198,7 @@ export default function IntegrationsPage() {
               </h2>
               <div className="mt-6 grid gap-3">
                 {directVsStackaura.with.map((item) => (
-                  <div key={item} className={cn(darkInsetPanelClass, "backdrop-blur-none px-4 py-3 text-sm text-[#d3def0]")}>
+                  <div key={item} className={cn(siteDarkInsetSurfaceClass, "backdrop-blur-none px-4 py-3 text-sm text-[#d3def0]")}>
                     {item}
                   </div>
                 ))}
@@ -215,7 +215,7 @@ export default function IntegrationsPage() {
                 Build once, then let Stackaura handle the rails underneath.
               </h2>
               <div className="mt-6 grid gap-4">
-                <div className={cn(darkInsetPanelClass, "backdrop-blur-none p-5")}>
+                <div className={cn(siteDarkInsetSurfaceClass, "backdrop-blur-none p-5")}>
                   <div className="grid gap-4 md:grid-cols-[0.9fr_auto_1.1fr] md:items-center">
                     <div className="rounded-[20px] border border-white/10 bg-white/[0.03] px-4 py-5 text-center">
                       <div className="text-[11px] uppercase tracking-[0.16em] text-[#8dd8ff]">Your app</div>
@@ -265,7 +265,7 @@ export default function IntegrationsPage() {
                 </div>
               ))}
 
-              <div className={cn(darkInsetPanelClass, "backdrop-blur-none p-5")}>
+              <div className={cn(siteDarkInsetSurfaceClass, "backdrop-blur-none p-5")}>
                 <div className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#8dd8ff]">
                   Execution result
                 </div>

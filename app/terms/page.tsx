@@ -2,7 +2,7 @@ import {
   PublicPageShell,
   cn,
   publicSectionLabelClass,
-  publicSubtleSurfaceClass,
+  siteSubtleSurfaceClass,
   publicSurfaceClass,
 } from "../components/stackaura-ui";
 
@@ -51,7 +51,7 @@ export default function TermsPage() {
         <div className={publicSectionLabelClass}>Terms summary</div>
         <div className="mt-6 grid gap-4">
           {sections.map((section) => (
-            <div key={section.title} className={cn(publicSubtleSurfaceClass, "p-6")}>
+            <div key={section.title} className={cn(siteSubtleSurfaceClass, "p-6")}>
               <div className="text-lg font-semibold tracking-tight text-[#0a2540]">
                 {section.title}
               </div>

@@ -76,7 +76,7 @@ export default function PublicHeaderNav({
   }, [activeIndex, hoveredIndex, pathname]);
 
   return (
-    <nav className={cn("hidden lg:flex", className)}>
+    <nav className={cn("hidden xl:flex", className)}>
       <div
         ref={containerRef}
         className="relative flex items-center gap-1"
@@ -85,7 +85,7 @@ export default function PublicHeaderNav({
         <span
           ref={indicatorRef}
           aria-hidden="true"
-          className="pointer-events-none absolute bottom-0 left-0 h-px bg-[#4f46e5] transition-[transform,width,opacity] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none dark:bg-[#8dd8ff]"
+          className="pointer-events-none absolute bottom-0 left-0 h-px bg-[#217a64] transition-[transform,width,opacity] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none"
           style={{ opacity: 0, width: 0 }}
         />
 
@@ -102,8 +102,8 @@ export default function PublicHeaderNav({
               onMouseEnter={() => setHoveredIndex(index)}
               onFocus={() => setHoveredIndex(index)}
               className={cn(
-                "group relative z-10 inline-flex min-h-[42px] items-center justify-center px-4 py-2 text-sm font-medium text-[#425466] transition duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:text-[#0a2540] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#7a73ff]/18 motion-reduce:transition-none dark:text-[#e2ebf8] dark:hover:text-white dark:focus-visible:ring-[#20BCED]/24",
-                isActive && "text-[#0a2540] dark:text-white",
+                "group relative z-10 inline-flex min-h-[42px] items-center justify-center px-4 py-2 text-sm font-medium text-[#506e60] transition duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:text-[#0d1b20] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#217a64]/30 motion-reduce:transition-none",
+                isActive && "text-[#0d1b20]",
               )}
             >
               <span className="relative">
@@ -111,8 +111,7 @@ export default function PublicHeaderNav({
                 <span
                   aria-hidden="true"
                   className={cn(
-                    "absolute inset-x-0 -bottom-1 h-px bg-[#4f46e5] transition-opacity duration-300 motion-reduce:transition-none",
-                    "dark:bg-[#8dd8ff]",
+                    "absolute inset-x-0 -bottom-1 h-px bg-[#217a64] transition-opacity duration-300 motion-reduce:transition-none",
                     isActive ? "opacity-100" : "opacity-0 group-hover:opacity-70",
                   )}
                 />
