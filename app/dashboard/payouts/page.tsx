@@ -9,7 +9,7 @@ import {
   lightProductSectionEyebrowClass,
   lightProductStatusPillClass,
   publicSecondaryButtonClass,
-} from "../../components/stackaura-ui";
+} from "../console-ui";
 import { getMerchantSupportOverview, getSelectedMerchantWorkspace } from "../console-data";
 import { formatCurrencyFromCents, formatDateTime, formatNumber } from "../console-utils";
 
@@ -29,7 +29,7 @@ export default async function DashboardPayoutsPage() {
           <div className="max-w-3xl">
             <div className={lightProductSectionEyebrowClass}>Payouts</div>
             <h1 className="mt-4 text-4xl font-semibold tracking-tight text-[#0a2540] sm:text-5xl">
-              Recent payout activity for the selected merchant.
+              Payout activity
             </h1>
             <p className={cn(lightProductMutedTextClass, "mt-5 max-w-2xl")}>
               This is a real read-only payout view built from the merchant support context. Full payout

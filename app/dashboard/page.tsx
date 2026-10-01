@@ -10,7 +10,7 @@ import {
   lightProductStatusPillClass,
   publicPrimaryButtonClass,
   publicSecondaryButtonClass,
-} from "../components/stackaura-ui";
+} from "./console-ui";
 import ApiKeyWelcome from "./api-key-welcome";
 import {
   getSelectedMerchantWorkspace,
@@ -76,95 +76,40 @@ export default async function DashboardOverviewPage() {
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 sm:py-8">
-      <section className={cn(lightProductHeroClass, "relative overflow-hidden p-6 lg:p-8")}>
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_8%_16%,rgba(255,255,255,0.34),transparent_22%),radial-gradient(circle_at_86%_18%,rgba(122,115,255,0.14),transparent_24%),radial-gradient(circle_at_76%_74%,rgba(125,211,252,0.18),transparent_28%),linear-gradient(180deg,rgba(255,255,255,0.16),transparent_18%)]" />
-
-        <div className="relative grid gap-8 lg:grid-cols-[1.12fr_0.88fr] lg:items-start">
-          <div>
+      <section className={cn(lightProductHeroClass, "console-overview-intro p-6")}>
+        <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_340px]">
+          <div className="min-w-0">
             <div className={lightProductSectionEyebrowClass}>Overview</div>
-            <h1 className="mt-4 max-w-3xl text-4xl font-semibold tracking-tight text-[#0a2540] sm:text-5xl">
-              See real payment activity, routing, and recovery for one merchant workspace.
-            </h1>
-            <p className={cn(lightProductMutedTextClass, "mt-5 max-w-3xl")}>
-              Signed in as <span className="font-medium text-[#0a2540]">{workspace.me.user.email}</span>.
-              This overview focuses on the selected workspace, its latest payment activity, and the
-              fastest operational next steps.
+            <h1 className="mt-2 font-semibold text-[#0a2540]">Payment overview</h1>
+            <p className={cn(lightProductMutedTextClass, "mt-3")}>
+              {workspace.selectedMerchantName} payment activity, routing, and recovery.
             </p>
-
-            <div className="mt-5 flex flex-wrap gap-2">
+            <div className="mt-4 flex flex-wrap gap-2">
               <span className={lightProductStatusPillClass(workspace.isMerchantActive ? "success" : "muted")}>
                 {workspace.isMerchantActive ? "Merchant active" : "Merchant inactive"}
               </span>
-              <span className={lightProductStatusPillClass("violet")}>
-                {workspace.selectedMembership?.role || "Member"}
-              </span>
-              <span className={lightProductStatusPillClass("warning")}>
-                {formatPlanLabel(selectedPlan.code)} plan
-              </span>
+              <span className={lightProductStatusPillClass("violet")}>{workspace.selectedMembership?.role || "Member"}</span>
+              <span className={lightProductStatusPillClass("muted")}>{formatPlanLabel(selectedPlan.code)} plan</span>
               <span className={lightProductStatusPillClass(hasPayments ? "success" : "muted")}>
                 {hasPayments ? "Live overview" : "Onboarding state"}
               </span>
             </div>
-
-            <div className="mt-7 flex flex-col gap-3 sm:flex-row">
-              <Link href="/dashboard/payments" className={publicPrimaryButtonClass}>
-                Open payments
-              </Link>
-              <Link href="/dashboard/routing" className={publicSecondaryButtonClass}>
-                Review routing
-              </Link>
+            <div className="mt-5 flex flex-wrap gap-3">
+              <Link href="/dashboard/payments" className={publicPrimaryButtonClass}>Open payments</Link>
+              <Link href="/dashboard/routing" className={publicSecondaryButtonClass}>Review routing</Link>
             </div>
           </div>
-
-          <div className="grid gap-4">
-            <MerchantSwitcher
-              memberships={workspace.memberships}
-              selectedMerchantId={workspace.selectedMerchantId}
-            />
-
-            <div className={cn(lightProductInsetPanelClass, "p-5")}>
-              <div className="flex flex-wrap items-start justify-between gap-3">
-                <div>
-                  <div className="text-xs uppercase tracking-[0.2em] text-[#6b7c93]">
-                    Merchant snapshot
-                  </div>
-                  <div className="mt-2 text-xl font-semibold tracking-tight text-[#0a2540]">
-                    {workspace.selectedMerchantName}
-                  </div>
-                </div>
-                <span className={lightProductStatusPillClass(hasPayments ? "success" : "muted")}>
-                  {formatNumber(analytics.totalPayments)} payments
-                </span>
-              </div>
-
-              <p className={cn(lightProductMutedTextClass, "mt-4")}>
-                Stackaura provides orchestration and routing infrastructure. Licensed providers
-                process and settle funds while this overview surfaces real merchant activity.
-              </p>
-
-              <div className="mt-4 grid gap-3 sm:grid-cols-3">
-                <div className={cn(lightProductInsetPanelClass, "px-4 py-3")}>
-                  <div className="text-xs uppercase tracking-[0.18em] text-[#6b7c93]">Workspace</div>
-                  <div className="mt-2 text-lg font-semibold text-[#0a2540]">
-                    {workspace.selectedMerchantId ? "Selected" : "Missing"}
-                  </div>
-                </div>
-                <div className={cn(lightProductInsetPanelClass, "px-4 py-3")}>
-                  <div className="text-xs uppercase tracking-[0.18em] text-[#6b7c93]">Email</div>
-                  <div className="mt-2 truncate text-lg font-semibold text-[#0a2540]">
-                    {workspace.selectedMerchantEmail}
-                  </div>
-                </div>
-                <div className={cn(lightProductInsetPanelClass, "px-4 py-3")}>
-                  <div className="text-xs uppercase tracking-[0.18em] text-[#6b7c93]">Gateways</div>
-                  <div className="mt-2 text-lg font-semibold text-[#0a2540]">
-                    {formatNumber(analytics.activeGatewaysUsed)}
-                  </div>
-                </div>
-              </div>
+          <div className="min-w-0">
+            <MerchantSwitcher memberships={workspace.memberships} selectedMerchantId={workspace.selectedMerchantId} />
+            <div className="console-muted mt-3 flex flex-wrap justify-between gap-2 text-xs">
+              <span>{formatNumber(analytics.totalPayments)} payments</span>
+              <span>{formatNumber(analytics.activeGatewaysUsed)} gateways in use</span>
             </div>
           </div>
         </div>
+        <p className="console-muted mt-5 border-t border-[var(--console-border)] pt-3 text-xs leading-5">
+          StackAura provides orchestration and routing infrastructure. Licensed providers process and settle funds.
+        </p>
       </section>
 
       <ApiKeyWelcome

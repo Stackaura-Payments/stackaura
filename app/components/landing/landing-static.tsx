@@ -20,7 +20,7 @@ export function LandingHero() {
             <span className="h-0.5 w-6 shrink-0 bg-current" aria-hidden="true" /> Payment infrastructure · Africa
           </p>
           <h1 className="mt-3 max-w-[620px] font-semibold leading-[1.1] text-[32px] min-[380px]:text-[36px] sm:text-[50px] md:text-[38px] lg:mt-6 lg:text-[58px] xl:text-[64px]">
-            One integration.<br /><span className="text-[#c5f273]">Every payment rail.</span>
+            One integration.<br /><span className="text-[#c5f273]">Multiple Payment Railway</span>
           </h1>
           <p className="mt-3 max-w-[55ch] text-[13px] leading-[21px] text-[#c9d5d2] sm:mt-6 sm:text-lg sm:leading-8 md:text-sm md:leading-7 lg:text-lg lg:leading-8">
             Connect your checkout to multiple payment rails. Stackaura helps route transactions, recover from provider interruptions, and keep operations in view.

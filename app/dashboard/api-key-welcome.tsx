@@ -12,7 +12,7 @@ import {
   publicPrimaryButtonClass,
   publicSecondaryButtonClass,
   publicSubtleSurfaceClass,
-} from "../components/stackaura-ui";
+} from "./console-ui";
 import {
   type ApiKeyRow,
   getErrorMessage,

@@ -9,7 +9,7 @@ import {
   lightProductInputClass,
   lightProductInsetPanelClass,
   lightProductStatusPillClass,
-} from "../components/stackaura-ui";
+} from "./console-ui";
 
 type Membership = {
   id: string;
@@ -45,7 +45,7 @@ export default function MerchantSwitcher({
     <div
       className={cn(
         isDark ? darkInsetPanelClass : lightProductInsetPanelClass,
-        "flex w-full flex-col gap-3 p-4 sm:w-auto sm:min-w-[340px]",
+        "flex w-full min-w-0 flex-col gap-3 p-4",
       )}
     >
       <div className="flex items-start justify-between gap-3">

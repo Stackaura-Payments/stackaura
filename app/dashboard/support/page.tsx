@@ -8,7 +8,7 @@ import {
   lightProductPanelClass,
   lightProductSectionEyebrowClass,
   lightProductStatusPillClass,
-} from "../../components/stackaura-ui";
+} from "../console-ui";
 import { getServerMe } from "../../lib/auth";
 import MerchantSwitcher from "../merchant-switcher";
 import SupportConsole from "./support-console";
@@ -37,7 +37,7 @@ export default async function DashboardSupportPage() {
           <div className="max-w-3xl">
             <div className={lightProductSectionEyebrowClass}>Merchant support</div>
             <h1 className="mt-4 text-4xl font-semibold tracking-tight text-[#0a2540] sm:text-5xl">
-              Merchant-aware AI support inside the Stackaura dashboard.
+              Merchant support
             </h1>
             <p className={cn(lightProductMutedTextClass, "mt-5 max-w-2xl text-base sm:text-lg")}>
               Ask setup, integration, gateway, account, payout, and payment troubleshooting

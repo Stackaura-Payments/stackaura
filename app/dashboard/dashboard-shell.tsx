@@ -2,7 +2,8 @@
 
 import type { ReactNode } from "react";
 import { useState } from "react";
-import { SoftProductBackground, cn } from "../components/stackaura-ui";
+import { SoftProductBackground, cn } from "./console-ui";
+import "./console.css";
 import Header from "./Header";
 import Sidebar from "./Sidebar";
 
@@ -30,7 +31,7 @@ export default function DashboardShell({
       <div
         className={cn(
           "dashboard-shell relative z-10 min-h-screen transition-[padding] duration-300",
-          collapsed ? "lg:pl-[108px]" : "lg:pl-[288px]",
+          collapsed ? "lg:pl-[72px]" : "lg:pl-[232px]",
         )}
       >
         <Header
@@ -38,7 +39,7 @@ export default function DashboardShell({
           userId={userId}
           onMenuToggle={() => setMobileOpen((open) => !open)}
         />
-        <div className="relative z-10 pb-10">{children}</div>
+        <div className="console-content relative z-10 pb-10">{children}</div>
       </div>
     </SoftProductBackground>
   );

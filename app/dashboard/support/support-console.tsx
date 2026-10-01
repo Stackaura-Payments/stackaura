@@ -13,7 +13,7 @@ import {
   lightProductPanelClass,
   lightProductSectionEyebrowClass,
   lightProductStatusPillClass,
-} from "../../components/stackaura-ui";
+} from "../console-ui";
 
 type MerchantSeed = {
   id: string;

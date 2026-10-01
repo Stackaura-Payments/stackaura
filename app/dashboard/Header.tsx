@@ -2,11 +2,7 @@
 
 import { usePathname, useRouter } from "next/navigation";
 import { useTransition } from "react";
-import {
-  cn,
-  lightProductHeroClass,
-  lightProductSectionEyebrowClass,
-} from "../components/stackaura-ui";
+import { Menu } from "lucide-react";
 import { resolveDashboardTitle } from "./dashboard-nav";
 import DashboardNotifications from "./DashboardNotifications";
 import DashboardSearch from "./DashboardSearch";
@@ -39,9 +35,9 @@ export default function Header({
   }
 
   return (
-    <header className="sticky top-0 z-30 px-4 pt-5 sm:px-6 sm:pt-6 lg:px-8">
-      <div className={cn(lightProductHeroClass, "px-4 py-4 sm:px-5 sm:py-5")}>
-        <div className="relative flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
+    <header className="console-header sticky top-0 z-30 px-4 sm:px-6">
+      <div className="py-3">
+        <div className="relative flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
           <div className="flex items-center gap-3">
             <Button
               type="button"
@@ -50,23 +46,19 @@ export default function Header({
               onClick={onMenuToggle}
               className="lg:hidden"
               aria-label="Toggle navigation"
+              title="Toggle navigation"
             >
-              <svg viewBox="0 0 20 20" className="h-5 w-5" fill="none">
-                <path d="M4 6H16" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
-                <path d="M4 10H16" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
-                <path d="M4 14H12" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
-              </svg>
+              <Menu className="size-5" />
             </Button>
 
             <div>
-              <div className={lightProductSectionEyebrowClass}>Dashboard</div>
-              <div className="mt-1 text-2xl font-semibold tracking-tight text-[#0a2540] dark:text-white">
+              <div className="text-base font-semibold text-[#0a2540] dark:text-white">
                 {resolveDashboardTitle(pathname)}
               </div>
             </div>
           </div>
 
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-end">
+          <div className="flex min-w-0 items-center gap-3 md:flex-1 md:justify-end">
             <DashboardSearch />
 
             <div className="flex items-center justify-end gap-3">
@@ -77,22 +69,21 @@ export default function Header({
                   <Button
                     type="button"
                     variant="ghost"
-                    className="inline-flex min-h-[48px] items-center gap-3 rounded-2xl px-3 py-2"
+                    className="inline-flex h-10 min-h-10 items-center gap-2 px-2 py-1"
+                    aria-label="Account menu"
+                    title="Account menu"
                   >
                     <Avatar>
                       <AvatarImage src={avatarSrc ?? undefined} alt={`${userEmail} profile photo`} />
                       <AvatarFallback>{initials}</AvatarFallback>
                     </Avatar>
-                    <span className="hidden max-w-[220px] truncate text-left sm:block">
+                    <span className="hidden max-w-[160px] truncate text-left xl:block">
                       <span className="block text-sm font-medium text-[#0a2540] dark:text-white">{userEmail}</span>
-                      <span className="mt-0.5 block text-xs uppercase tracking-[0.16em] text-[#6b7c93] dark:text-[#8ea5c0]">
-                        Workspace operator
-                      </span>
                     </span>
                   </Button>
                 </PopoverTrigger>
 
-                <PopoverContent className="w-[320px] overflow-hidden p-0" align="end">
+                <PopoverContent className="console-popover w-[min(320px,calc(100vw-24px))] overflow-hidden p-0" align="end">
                   <div className="flex items-center gap-3 px-4 py-4">
                     <Avatar className="h-12 w-12">
                       <AvatarImage src={avatarSrc ?? undefined} alt={`${userEmail} profile photo`} />

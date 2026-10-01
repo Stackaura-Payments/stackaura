@@ -16,7 +16,7 @@ import {
   lightProductStatusPillClass,
   publicPrimaryButtonClass,
   publicSecondaryButtonClass,
-} from "../../components/stackaura-ui";
+} from "../console-ui";
 import {
   type ApiEnv,
   type ApiKeyRow,
@@ -267,7 +267,7 @@ export default function ApiKeysPage() {
             <div className="max-w-3xl">
               <div className={lightProductSectionEyebrowClass}>Developer keys</div>
               <h1 className="mt-3 text-4xl font-semibold tracking-tight text-[#0a2540] sm:text-5xl">
-                Manage merchant credentials from the same Stackaura visual system.
+                API keys
               </h1>
               <p className={cn(lightProductMutedTextClass, "mt-4 max-w-3xl")}>
                 Create, reveal once, copy, and revoke merchant secret keys across test and live

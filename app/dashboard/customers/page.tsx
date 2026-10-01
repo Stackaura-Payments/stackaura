@@ -9,7 +9,7 @@ import {
   lightProductSectionEyebrowClass,
   lightProductStatusPillClass,
   publicSecondaryButtonClass,
-} from "../../components/stackaura-ui";
+} from "../console-ui";
 import { getDashboardPayments, getSelectedMerchantWorkspace } from "../console-data";
 import { formatCurrencyFromCents, formatDateTime, formatNumber } from "../console-utils";
 
@@ -79,7 +79,7 @@ export default async function DashboardCustomersPage({
           <div className="max-w-3xl">
             <div className={lightProductSectionEyebrowClass}>Customers</div>
             <h1 className="mt-4 text-4xl font-semibold tracking-tight text-[#0a2540] sm:text-5xl">
-              Customer activity derived from real payment history.
+              Customers
             </h1>
             <p className={cn(lightProductMutedTextClass, "mt-5 max-w-2xl")}>
               Stackaura does not maintain a separate CRM yet, so this page truthfully groups merchant

@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { cn } from "../components/stackaura-ui";
+import { cn } from "./console-ui";
 
 type RecentPayment = {
   amountCents: number;

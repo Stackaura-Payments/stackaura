@@ -1,4 +1,4 @@
-import { cn } from "../components/stackaura-ui";
+import { cn } from "./console-ui";
 
 type Tone = "cyan" | "violet" | "amber" | "slate";
 

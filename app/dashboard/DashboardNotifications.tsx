@@ -2,7 +2,8 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
-import { cn, lightProductStatusPillClass } from "../components/stackaura-ui";
+import { Bell } from "lucide-react";
+import { cn, lightProductStatusPillClass } from "./console-ui";
 import { Button } from "../../components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "../../components/ui/popover";
 import { Separator } from "../../components/ui/separator";
@@ -113,12 +114,10 @@ export default function DashboardNotifications({ userEmail }: { userEmail: strin
           variant="ghost"
           size="icon"
           aria-label="Notifications"
+          title="Notifications"
           className="relative shrink-0"
         >
-          <svg viewBox="0 0 20 20" className="h-5 w-5" fill="none">
-            <path d="M10 4.25C8.2 4.25 6.75 5.7 6.75 7.5V9.1C6.75 9.7 6.55 10.28 6.18 10.75L5.25 11.95C4.72 12.65 5.22 13.65 6.1 13.65H13.9C14.78 13.65 15.28 12.65 14.75 11.95L13.82 10.75C13.45 10.28 13.25 9.7 13.25 9.1V7.5C13.25 5.7 11.8 4.25 10 4.25Z" stroke="currentColor" strokeWidth="1.6" />
-            <path d="M8.3 15.2C8.63 15.9 9.26 16.25 10 16.25C10.74 16.25 11.37 15.9 11.7 15.2" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
-          </svg>
+          <Bell className="size-[18px]" />
           {unreadCount > 0 ? (
             <span className="absolute right-2 top-2 flex min-h-[18px] min-w-[18px] items-center justify-center rounded-full bg-[#635bff] px-1 text-[10px] font-semibold text-white">
               {unreadCount}
@@ -127,7 +126,7 @@ export default function DashboardNotifications({ userEmail }: { userEmail: strin
         </Button>
       </PopoverTrigger>
 
-      <PopoverContent className="p-0" align="end">
+      <PopoverContent className="console-popover w-[min(360px,calc(100vw-24px))] p-0" align="end">
         <div className="flex items-center justify-between gap-3 px-4 py-3">
           <div>
             <div className="text-xs uppercase tracking-[0.18em] text-[#6b7c93] dark:text-[#8ea5c0]">Notifications</div>

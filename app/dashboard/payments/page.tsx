@@ -10,7 +10,7 @@ import {
   lightProductSectionEyebrowClass,
   lightProductStatusPillClass,
   publicSecondaryButtonClass,
-} from "../../components/stackaura-ui";
+} from "../console-ui";
 import { getDashboardPayments, getSelectedMerchantWorkspace, getWorkspaceAnalytics } from "../console-data";
 import {
   formatCurrencyFromCents,
@@ -112,7 +112,7 @@ export default async function DashboardPaymentsPage({
           <div className="max-w-3xl">
             <div className={lightProductSectionEyebrowClass}>Payments</div>
             <h1 className="mt-4 text-4xl font-semibold tracking-tight text-[#0a2540] sm:text-5xl">
-              Merchant payment activity in one operational view.
+              Payments
             </h1>
             <p className={cn(lightProductMutedTextClass, "mt-5 max-w-2xl")}>
               Search, filter, and inspect real payments for the selected merchant workspace.

@@ -2,12 +2,13 @@
 
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
+import { Search } from "lucide-react";
 import {
   cn,
   lightProductCompactGhostButtonClass,
   lightProductPanelClass,
   lightProductStatusPillClass,
-} from "../components/stackaura-ui";
+} from "./console-ui";
 import { Input } from "../../components/ui/input";
 
 type SearchResult = {
@@ -101,15 +102,8 @@ export default function DashboardSearch() {
   }
 
   return (
-    <div ref={containerRef} className="relative w-full min-w-0 sm:w-[340px]">
-      <svg
-        viewBox="0 0 20 20"
-        className="pointer-events-none absolute left-4 top-1/2 z-10 h-4 w-4 -translate-y-1/2 text-[#6b7c93] dark:text-[#8ea5c0]"
-        fill="none"
-      >
-        <circle cx="9" cy="9" r="5" stroke="currentColor" strokeWidth="1.6" />
-        <path d="M13 13L17 17" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
-      </svg>
+    <div ref={containerRef} className="relative w-full min-w-0 md:max-w-[340px]">
+      <Search className="console-muted pointer-events-none absolute left-3 top-1/2 z-10 size-4 -translate-y-1/2" aria-hidden="true" />
 
       <Input
         type="search"
@@ -125,7 +119,8 @@ export default function DashboardSearch() {
             submitSearch();
           }
         }}
-        placeholder="Search payments, customers, transactions..."
+        placeholder="Search payments, customers..."
+        aria-label="Search payments, customers, gateways and API keys"
         className={cn("h-11 w-full pl-11 pr-4")}
       />
 

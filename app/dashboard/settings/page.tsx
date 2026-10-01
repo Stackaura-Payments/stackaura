@@ -8,7 +8,7 @@ import {
   lightProductPanelClass,
   lightProductSectionEyebrowClass,
   publicSecondaryButtonClass,
-} from "../../components/stackaura-ui";
+} from "../console-ui";
 import {
   getMerchantApiKeys,
   getMerchantGatewayConnections,
@@ -39,7 +39,7 @@ export default async function DashboardSettingsPage() {
           <div className="max-w-3xl">
             <div className={lightProductSectionEyebrowClass}>Settings</div>
             <h1 className="mt-4 text-4xl font-semibold tracking-tight text-[#0a2540] sm:text-5xl">
-              Workspace, profile, security, and notification posture.
+              Workspace settings
             </h1>
             <p className={cn(lightProductMutedTextClass, "mt-5 max-w-2xl")}>
               This page surfaces the real operational settings state for the selected merchant workspace.

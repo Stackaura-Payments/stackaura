@@ -7,7 +7,7 @@ import {
   lightProductPanelClass,
   lightProductSectionEyebrowClass,
   lightProductStatusPillClass,
-} from "../../components/stackaura-ui";
+} from "../console-ui";
 import { getMerchantSupportOverview, getSelectedMerchantWorkspace, getWorkspaceAnalytics } from "../console-data";
 import {
   formatCurrencyFromCents,
@@ -38,7 +38,7 @@ export default async function DashboardRecoveryPage() {
           <div className="max-w-3xl">
             <div className={lightProductSectionEyebrowClass}>Recovery</div>
             <h1 className="mt-4 text-4xl font-semibold tracking-tight text-[#0a2540] sm:text-5xl">
-              Fallback and recovery performance for this merchant.
+              Payment recovery
             </h1>
             <p className={cn(lightProductMutedTextClass, "mt-5 max-w-2xl")}>
               Review recovered payments, recent payment failures, and the current plan posture for

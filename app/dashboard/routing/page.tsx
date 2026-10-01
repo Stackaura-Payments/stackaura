@@ -7,7 +7,7 @@ import {
   lightProductPanelClass,
   lightProductSectionEyebrowClass,
   lightProductStatusPillClass,
-} from "../../components/stackaura-ui";
+} from "../console-ui";
 import {
   getMerchantGatewayConnections,
   getSelectedMerchantWorkspace,
@@ -41,7 +41,7 @@ export default async function DashboardRoutingPage() {
           <div className="max-w-3xl">
             <div className={lightProductSectionEyebrowClass}>Routing</div>
             <h1 className="mt-4 text-4xl font-semibold tracking-tight text-[#0a2540] sm:text-5xl">
-              Gateway routing history and distribution for this workspace.
+              Payment routing
             </h1>
             <p className={cn(lightProductMutedTextClass, "mt-5 max-w-2xl")}>
               Review how Stackaura selected gateways, how often fallback was used, and what the latest

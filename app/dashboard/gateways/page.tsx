@@ -12,7 +12,7 @@ import {
   lightProductPanelClass,
   lightProductSectionEyebrowClass,
   lightProductStatusPillClass,
-} from "../../components/stackaura-ui";
+} from "../console-ui";
 
 type ReadbackStatus = "loading" | "available" | "error";
 
@@ -1225,7 +1225,7 @@ export default function GatewayConnectionsPage() {
             <div className="max-w-3xl">
               <div className={lightProductSectionEyebrowClass}>Gateway connections</div>
               <h1 className="mt-3 text-4xl font-semibold tracking-tight text-[#0a2540] sm:text-5xl">
-                Connect each merchant to Ozow, Yoco, and Paystack from the dashboard.
+                Gateway connections
               </h1>
               <p className={cn(lightProductMutedTextClass, "mt-4 max-w-3xl")}>
                 Save merchant-scoped gateway credentials inside the Stackaura dashboard, keep

@@ -9,7 +9,7 @@ import {
   lightProductInsetPanelClass,
   lightProductStatusPillClass,
   publicSecondaryButtonClass,
-} from "../components/stackaura-ui";
+} from "./console-ui";
 import { useProfileAvatar } from "./use-profile-avatar";
 
 const MAX_UPLOAD_SIZE_BYTES = 2 * 1024 * 1024;
