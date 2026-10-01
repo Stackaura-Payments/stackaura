@@ -330,7 +330,7 @@ export function SoftProductBackground({
 
 export function PublicHeader() {
   return (
-    <header className="public-header-shell relative z-20 border-b border-[#d9e4dc] bg-[#f9fbf8] px-4 sm:px-6 lg:px-10">
+    <header className="public-header-shell public-header-dark relative z-20 border-b border-[#37574e] bg-[#0d1b20] px-4 sm:px-6 lg:px-10">
       <div className="mx-auto flex max-w-[1440px] items-center justify-between gap-4 py-4 lg:relative lg:gap-6">
         <div className="public-header-block min-w-0 flex items-center gap-10">
           <div className="min-w-0 xl:hidden">

@@ -260,6 +260,17 @@ body {
 }
 
 /* Public marketing pages keep the homepage's light palette in either app theme. */
+.public-header-dark { background-color: #0d1b20; color: #edf5ef; }
+.public-header-dark :is(a, summary) { color: #edf5ef; }
+.public-header-dark :is(a, summary):hover { color: #c5f273; }
+.public-header-dark [class*="text-[#0d1b20]"] { color: #edf5ef; }
+.public-header-dark [class*="text-[#217a64]"] { color: #c5f273; }
+.public-header-dark [class*="bg-[#217a64]"] { background-color: #c5f273; }
+.public-header-dark :is([class*="bg-[#f9fbf8]"], [class*="bg-white"], [class*="bg-[#e7f2ec]"]) { background-color: #14282b; }
+.public-header-dark :is([class*="border-[#d9e4dc]"], [class*="border-[#9fc2aa]"], [class*="border-[#0d1b20]"]) { border-color: #527669; }
+.public-header-dark a[class*="bg-[#0d1b20]"] { background-color: #c5f273; color: #0d1b20; }
+.public-header-dark a[class*="bg-[#0d1b20]"]:hover { background-color: #dcfaa2; }
+.public-header-dark summary:hover { background-color: #193232; }
 .dark .site-public-light { background-color: #f9fbf8; color: #0d1b20; }
 .dark .site-public-light .text-\[\#0a2540\] { color: #0a2540; }
 .dark .site-public-light .text-\[\#425466\] { color: #425466; }
