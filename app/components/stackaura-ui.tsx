@@ -257,17 +257,16 @@ export function BrandLockup({
     <Link href="/" className="flex min-w-0 items-center gap-3">
       <div
         className={cn(
-          "flex items-center justify-center rounded-[5px]",
-          brandGlassContainerClass,
+          "flex shrink-0 items-center justify-center",
           compact ? "h-10 w-10" : "h-11 w-11"
         )}
       >
         <Image
           src="/stackaura-logo.png"
           alt="Stackaura"
-          width={compact ? 22 : 26}
-          height={compact ? 22 : 26}
-          className="object-contain"
+          width={compact ? 40 : 44}
+          height={compact ? 40 : 44}
+          className="object-contain mix-blend-lighten"
           priority
         />
       </div>
