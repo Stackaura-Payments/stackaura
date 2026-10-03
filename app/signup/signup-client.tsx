@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { AuthFormFrame, AuthShell } from "../components/stackaura-auth";
+import SocialSignIn from "../components/social-sign-in";
 import { trackUserSignup } from "../lib/google-analytics";
 import { trackMetaEvent } from "../lib/meta-pixel";
 import {
@@ -415,7 +416,7 @@ export default function SignupClient({
   return (
     <AuthShell
       eyebrow="Merchant onboarding"
-      title="Start accepting payments in minutes."
+      title="Create your merchant workspace."
       description="Launch with one integration for multiple gateways, then grow into smarter routing, fallback, and payment infrastructure built for merchant teams."
       features={featureCards}
     >
@@ -426,6 +427,7 @@ export default function SignupClient({
         status="Choose your plan"
         statusTone="muted"
       >
+        <SocialSignIn />
         <form onSubmit={handleSignup} className="space-y-5">
           <label className="block">
             <div className={publicFieldLabelClass}>Business name</div>

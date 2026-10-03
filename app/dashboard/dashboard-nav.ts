@@ -8,6 +8,7 @@ export type DashboardNavIcon =
   | "recovery"
   | "api"
   | "gateways"
+  | "verification"
   | "settings";
 
 export type DashboardNavItem = {
@@ -33,6 +34,7 @@ export const dashboardNavItems: DashboardNavItem[] = [
   { href: "/dashboard/api-keys", label: "API Keys", shortLabel: "API Keys", icon: "api" },
   { href: "/dashboard/gateways", label: "Gateways", shortLabel: "Gateways", icon: "gateways" },
   { href: "/dashboard/settings", label: "Settings", shortLabel: "Settings", icon: "settings" },
+  { href: "/dashboard/verification", label: "Business Verification", shortLabel: "Verification", icon: "verification" },
 ];
 
 export function resolveDashboardTitle(pathname: string) {
@@ -49,5 +51,6 @@ export function resolveDashboardTitle(pathname: string) {
   if (pathname.startsWith("/dashboard/routing")) return "Routing";
   if (pathname.startsWith("/dashboard/recovery")) return "Recovery";
   if (pathname.startsWith("/dashboard/settings")) return "Settings";
+  if (pathname.startsWith("/dashboard/verification")) return "Business Verification";
   return "Overview";
 }

@@ -152,6 +152,9 @@ export default async function DashboardSettingsPage() {
           </div>
 
           <div className="mt-5 flex flex-col gap-3">
+            <Link href="/dashboard/verification" className={publicSecondaryButtonClass}>
+              Business verification
+            </Link>
             <Link href="/dashboard/api-keys" className={publicSecondaryButtonClass}>
               Review developer keys
             </Link>

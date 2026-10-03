@@ -29,17 +29,17 @@ export function AuthShell({
 }) {
   return (
     <PublicBackground className="bg-[#0d1b20] text-white dark:bg-[#0d1b20]">
-      <div className="dark relative min-h-screen text-white">
+      <div className="dark relative min-h-screen bg-[#0d1b20] text-white">
         <div className="pointer-events-none absolute inset-0 opacity-20 [background-image:linear-gradient(rgba(121,159,151,.16)_1px,transparent_1px),linear-gradient(90deg,rgba(121,159,151,.16)_1px,transparent_1px)] [background-size:64px_64px]" aria-hidden="true" />
 
         <div className="relative flex min-h-screen justify-center px-4 py-10 sm:px-6 lg:px-8 lg:py-12">
           <div className="w-full max-w-[1240px]">
-            <div className="mb-10 flex items-center justify-between gap-4">
+            <div className="mb-10 flex flex-wrap items-center justify-between gap-4">
               <div className="shrink-0">
                 <BrandLockup inverse />
               </div>
 
-              <div className="shrink-0">
+              <div className="ml-auto shrink-0">
                 <Link
                   href="/"
                   className="text-sm font-medium text-[#c5f273] transition hover:text-white"

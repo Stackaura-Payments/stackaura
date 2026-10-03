@@ -6,7 +6,7 @@ import SignupClient from "./signup-client";
 
 export default async function SignupPage() {
   const me = await getServerMeSafe();
-  if (me) redirect("/dashboard");
+  if (me) redirect(me.onboardingRequired ? "/onboarding" : "/dashboard");
 
   const pricing = await getServerPricing();
   const plans = buildSignupPlans(pricing);

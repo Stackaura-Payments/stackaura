@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { AuthFormFrame, AuthShell } from "../components/stackaura-auth";
+import SocialSignIn from "../components/social-sign-in";
 import { trackLogin } from "../lib/google-analytics";
 import { trackMetaEvent } from "../lib/meta-pixel";
 import {
@@ -206,10 +207,12 @@ export default function LoginClient({
   accountCreated,
   createdEmail,
   nextPath,
+  oauthError,
 }: {
   accountCreated: boolean;
   createdEmail: string;
   nextPath?: string;
+  oauthError?: string;
 }) {
   const router = useRouter();
 
@@ -310,6 +313,7 @@ export default function LoginClient({
           </div>
         ) : null}
 
+        <SocialSignIn nextPath={nextPath || "/dashboard"} errorCode={oauthError} />
         <form onSubmit={onSubmit} className="mt-6 space-y-5">
           <label className="block">
             <div className={publicFieldLabelClass}>Email</div>

@@ -7,6 +7,7 @@ type LoginSearchParams = Promise<{
   created?: string | string[];
   email?: string | string[];
   next?: string | string[];
+  oauth_error?: string | string[];
 }>;
 
 function getSearchValue(value: string | string[] | undefined) {
@@ -41,6 +42,7 @@ export default async function LoginPage({
   const me = await getServerMeSafe();
 
   if (me) {
+    if (me.onboardingRequired) redirect("/onboarding");
     redirect(next || "/dashboard");
   }
 
@@ -49,6 +51,7 @@ export default async function LoginPage({
       accountCreated={created}
       createdEmail={email}
       nextPath={next || undefined}
+      oauthError={getSearchValue(resolvedSearchParams.oauth_error)}
     />
   );
 }

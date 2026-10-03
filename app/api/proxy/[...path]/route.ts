@@ -1,7 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { buildServerApiUrl } from "@/app/lib/server-api";
+import { isSameOriginRequest } from "@/app/lib/request-origin";
 
 const ALLOWED_PROXY_ROUTES = [
+  { method: "POST", pattern: /^v1\/auth\/workspace$/ },
+  { method: "GET", pattern: /^v1\/merchants\/[^/]+\/business-verification$/ },
+  { method: "POST", pattern: /^v1\/merchants\/[^/]+\/business-verification(?:\/submit)?$/ },
   { method: "GET", pattern: /^v1\/merchants\/[^/]+\/api-keys$/ },
   { method: "POST", pattern: /^v1\/merchants\/[^/]+\/api-keys$/ },
   { method: "POST", pattern: /^v1\/merchants\/[^/]+\/api-keys\/[^/]+\/revoke$/ },
@@ -51,6 +55,12 @@ async function proxy(req: NextRequest, ctx: RouteContext, method: string) {
     return NextResponse.json({ message: "Not found" }, { status: 404 });
   }
 
+  if (method === "POST" && (path === "v1/auth/workspace" || path.includes("/business-verification"))) {
+    if (!isSameOriginRequest(req) || !/^application\/json(?:;|$)/i.test(req.headers.get("content-type") ?? "")) {
+      return NextResponse.json({ message: "Invalid request origin or content type" }, { status: 403 });
+    }
+  }
+
   const url = new URL(req.url);
   const target = `${buildServerApiUrl(path)}${url.search}`;
   let res: Response;
@@ -71,6 +81,7 @@ async function proxy(req: NextRequest, ctx: RouteContext, method: string) {
   const body = await res.arrayBuffer();
   const outHeaders = new Headers();
   outHeaders.set("content-type", res.headers.get("content-type") ?? "application/json");
+  if (path.includes("/business-verification") || path === "v1/auth/workspace") outHeaders.set("Cache-Control", "no-store");
 
   return new NextResponse(body, { status: res.status, headers: outHeaders });
 }

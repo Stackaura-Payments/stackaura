@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation";
 import { useEffect } from "react";
 import {
   ArrowDownToLine, ChevronLeft, ChevronRight, CreditCard, LayoutDashboard,
-  LifeBuoy, Link2, Network, Plug, RotateCcw, Settings, SquareCode, Users, X,
+  LifeBuoy, Link2, Network, Plug, RotateCcw, Settings, ShieldCheck, SquareCode, Users, X,
 } from "lucide-react";
 import { cn, lightProductNavItemClass } from "./console-ui";
 import { dashboardNavItems, type DashboardNavIcon } from "./dashboard-nav";
@@ -14,13 +14,13 @@ import { dashboardNavItems, type DashboardNavIcon } from "./dashboard-nav";
 const icons = {
   overview: LayoutDashboard, payments: CreditCard, payment_links: Link2,
   payouts: ArrowDownToLine, customers: Users, routing: Network,
-  recovery: RotateCcw, api: SquareCode, gateways: Plug, settings: Settings,
+  recovery: RotateCcw, api: SquareCode, gateways: Plug, settings: Settings, verification: ShieldCheck,
 } satisfies Record<DashboardNavIcon, typeof LayoutDashboard>;
 
 const groups = [
   { label: "Workspace", icons: ["overview", "payments", "payment_links", "payouts", "customers"] },
   { label: "Operations", icons: ["routing", "recovery", "gateways"] },
-  { label: "Manage", icons: ["api", "settings"] },
+  { label: "Manage", icons: ["api", "verification", "settings"] },
 ];
 
 export default function Sidebar({ collapsed, mobileOpen, onCollapseToggle, onCloseMobile }: {

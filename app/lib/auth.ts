@@ -5,6 +5,7 @@ import { cache } from "react";
 import { fetchServerApi, isBackendUnavailableError } from "./server-api";
 
 export type AuthMeResponse = {
+  onboardingRequired?: boolean;
   user: { id: string; email: string };
   memberships: Array<{
     id: string;

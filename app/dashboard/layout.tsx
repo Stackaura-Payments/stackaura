@@ -10,6 +10,7 @@ export default async function DashboardLayout({
 }) {
   const me = await getServerMe();
   if (!me) redirect("/login");
+  if (me.onboardingRequired) redirect("/onboarding");
 
   return (
     <DashboardShell userEmail={me.user.email} userId={me.user.id}>
