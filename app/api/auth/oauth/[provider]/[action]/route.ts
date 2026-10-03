@@ -33,8 +33,9 @@ async function handle(req: NextRequest, ctx: Context) {
     if (params.get("error")) return failure(req, provider, "cancelled");
     const bindingToken = req.cookies.get(cookiesFor(provider))?.value;
     if (!bindingToken) return failure(req, provider);
+    const issuer = params.get("iss");
     const response = await fetchServerApi(`/v1/auth/oauth/${provider}/callback`, { method: "POST", cache: "no-store", headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ code: params.get("code"), state: params.get("state"), bindingToken }) });
+      body: JSON.stringify({ code: params.get("code"), state: params.get("state"), bindingToken, ...(typeof issuer === "string" ? { iss: issuer } : {}) }) });
     if (!response.ok) return failure(req, provider, response.status === 409 ? "existing_account" : "failed");
     const data = await response.json();
     const next = typeof data.nextPath === "string" && (data.nextPath === "/onboarding" || /^\/dashboard(?:\/[A-Za-z0-9_-]+)*\/?$/.test(data.nextPath)) ? data.nextPath : "/dashboard";
