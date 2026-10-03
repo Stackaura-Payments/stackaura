@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useEffect, useState } from "react";
 
 const messages: Record<string, string> = {
@@ -19,7 +20,7 @@ export default function SocialSignIn({ nextPath = "/dashboard", errorCode }: { n
   }, []);
   return <div className="my-6 space-y-3">
     <div className="grid gap-3 sm:grid-cols-2">
-      {(["google", "apple"] as const).map((provider) => providers[provider] ? <a key={provider} href={`/api/auth/oauth/${provider}/start?next=${encodeURIComponent(nextPath)}`} className="inline-flex min-h-12 items-center justify-center rounded border border-[#4d7167] px-3 py-2 text-center text-sm font-semibold text-[#edf6ef] hover:bg-[#25413d] focus-visible:outline-2 focus-visible:outline-[#c7f572]">Continue with {provider === "google" ? "Google" : "Apple"}</a> : <button key={provider} disabled title="Provider setup is pending" className="min-h-12 rounded border border-[#4d7167] px-3 py-2 text-sm text-[#a4b8af] disabled:cursor-not-allowed">{provider === "google" ? "Google" : "Apple"} unavailable</button>)}
+      {(["google", "apple"] as const).map((provider) => providers[provider] ? <a key={provider} href={`/api/auth/oauth/${provider}/start?next=${encodeURIComponent(nextPath)}`} className="inline-flex min-h-12 items-center justify-center gap-2.5 rounded border border-[#4d7167] px-3 py-2 text-center text-sm font-semibold text-[#edf6ef] hover:bg-[#25413d] focus-visible:outline-2 focus-visible:outline-[#c7f572]">{provider === "google" ? <span aria-hidden="true" className="shrink-0 rounded-sm bg-white p-1"><Image src="/google-g.png" alt="" width={18} height={18} className="h-auto" unoptimized /></span> : null}Continue with {provider === "google" ? "Google" : "Apple"}</a> : <button key={provider} disabled title="Provider setup is pending" className="min-h-12 rounded border border-[#4d7167] px-3 py-2 text-sm text-[#a4b8af] disabled:cursor-not-allowed">{provider === "google" ? "Google" : "Apple"} unavailable</button>)}
     </div>
     {error ? <p role="alert" className="text-sm text-rose-300">{error}</p> : null}
     <div className="flex items-center gap-3 text-sm text-[#b1c5bb]"><span className="h-px flex-1 bg-[#35564e]" />Or continue with email<span className="h-px flex-1 bg-[#35564e]" /></div>
