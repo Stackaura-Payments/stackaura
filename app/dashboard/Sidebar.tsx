@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import StackauraLogo from "../components/stackaura-logo";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect } from "react";
@@ -48,7 +48,7 @@ export default function Sidebar({ collapsed, mobileOpen, onCollapseToggle, onClo
     )}>
       <div className="flex min-h-16 items-center justify-between gap-2 px-2">
         <Link href="/dashboard" className="flex min-w-0 items-center gap-3" title="StackAura Merchant Console">
-          <Image src="/stackaura-logo.png" alt="StackAura" width={28} height={28} className="shrink-0" priority />
+          <StackauraLogo size={28} className="shrink-0" />
           <span className={cn("min-w-0", collapsed && "lg:hidden")}>
             <span className="block text-base font-semibold">StackAura<span className="console-muted">.</span></span>
             <span className="console-muted block text-[11px]">Merchant Console</span>

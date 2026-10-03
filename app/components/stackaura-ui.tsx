@@ -1,4 +1,4 @@
-import Image from "next/image";
+import StackauraLogo from "./stackaura-logo";
 import Link from "next/link";
 import type { ComponentPropsWithoutRef, ReactNode } from "react";
 import PublicHeaderNav from "./public-header-nav";
@@ -261,14 +261,7 @@ export function BrandLockup({
           compact ? "h-10 w-10" : "h-11 w-11"
         )}
       >
-        <Image
-          src="/stackaura-logo.png"
-          alt="Stackaura"
-          width={compact ? 40 : 44}
-          height={compact ? 40 : 44}
-          className="object-contain mix-blend-lighten"
-          priority
-        />
+        <StackauraLogo size={compact ? 40 : 44} className="object-contain" />
       </div>
 
       <div className="min-w-0">
