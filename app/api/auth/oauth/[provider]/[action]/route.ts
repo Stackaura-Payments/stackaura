@@ -40,8 +40,9 @@ async function handle(req: NextRequest, ctx: Context) {
     const data = await response.json();
     const next = typeof data.nextPath === "string" && (data.nextPath === "/onboarding" || /^\/dashboard(?:\/[A-Za-z0-9_-]+)*\/?$/.test(data.nextPath)) ? data.nextPath : "/dashboard";
     const out = NextResponse.redirect(new URL(next, req.url), 303);
-    for (const cookie of response.headers.getSetCookie()) out.headers.append("Set-Cookie", cookie);
     out.cookies.set(cookiesFor(provider), "", { httpOnly: true, path: "/", maxAge: 0, secure: req.nextUrl.protocol === "https:", sameSite: provider === "apple" ? "none" : "lax" });
+    // Set temporary cookies before forwarding the session: cookies.set rewrites Set-Cookie.
+    for (const cookie of response.headers.getSetCookie()) out.headers.append("Set-Cookie", cookie);
     out.headers.set("Cache-Control", "no-store");
     out.headers.set("Referrer-Policy", "no-referrer");
     return out;
